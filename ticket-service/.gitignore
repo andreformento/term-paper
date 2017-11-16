@@ -46,8 +46,3 @@ gradle-app.setting
 target
 
 .vscode/
-
-# mongodb
-data/
-
-src/test/gatling/results
