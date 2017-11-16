@@ -20,14 +20,26 @@ class BasicSimulation extends Simulation { // 3
 
   val scn = scenario("BasicSimulation") // 7
     .exec(http("request_1")  // 8
-         .post("http://ticketservice:8080/events/uuid456/tickets")
+         .post("/events/uuid456/tickets")
          .body(StringBody("""{ "idUser": "uuid123"}"""))
          .asJSON
       )
     .pause(5) // 10
 
   setUp( // 11
-    scn.inject(atOnceUsers(1)) // 12
+    scn.inject(
+      // https://gatling.io/docs/2.3/general/simulation_setup/
+      // nothingFor(2 /*seconds*/), // 1
+      // atOnceUsers(10), // 2
+      // rampUsers(10) over(5 /*seconds*/), // 3
+      // constantUsersPerSec(20) during(15 /*seconds*/), // 4
+      // constantUsersPerSec(20) during(15 /*seconds*/) randomized, // 5
+      // rampUsersPerSec(10) to 20 during(1 /*minutes*/), // 6
+      // rampUsersPerSec(10) to 20 during(1 /*minutes*/) randomized, // 7
+      // splitUsers(1000) into(rampUsers(10) over(10 /*seconds*/)) separatedBy(10 /*seconds*/), // 8
+      // splitUsers(1000) into(rampUsers(10) over(10 /*seconds*/)) separatedBy atOnceUsers(30), // 9
+      heavisideUsers(30000) over(20 /*seconds*/) // 10
+    )
   ).protocols(httpConf) // 13
 
 }
