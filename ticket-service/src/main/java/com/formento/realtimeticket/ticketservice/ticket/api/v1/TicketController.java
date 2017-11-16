@@ -22,7 +22,7 @@ public class TicketController {
     }
 
     @PostMapping
-@RequestMapping("/{idEvent}/tickets")
+    @RequestMapping("/{idEvent}/tickets")
     public HttpEntity<Resource<TicketResponse>> booking(
         @PathVariable("idEvent") String idEvent,
         @RequestBody final TicketRequest ticketRequest

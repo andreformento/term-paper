@@ -44,7 +44,7 @@ public class TicketControllerTest {
             body(json).
             when().
 //            post("/events/{idEvent}/tickets", idEvent).
-            post("/events/"+idEvent+"/tickets").
+    post("/events/" + idEvent + "/tickets").
             then().
             statusCode(is(HttpStatus.CREATED.value())).
             content("idEvent", equalTo(idEvent)).
