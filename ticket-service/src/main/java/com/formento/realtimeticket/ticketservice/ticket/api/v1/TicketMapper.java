@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 class TicketMapper {
 
     HttpEntity<Resource<TicketResponse>> mapToResponse(final Ticket ticket) {
-        return new ResponseEntity<>(new Resource<>(new TicketResponse(ticket), linkTo(TicketController.class).withSelfRel()), HttpStatus.OK);
+        return new ResponseEntity<>(new Resource<>(new TicketResponse(ticket), linkTo(TicketController.class).withSelfRel()), HttpStatus.CREATED);
     }
 
     Ticket mapFromRequest(final String idEvent, final TicketRequest ticketRequest) {

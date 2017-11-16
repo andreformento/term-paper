@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/events/{idEvent}/tickets")
+@RequestMapping("/events")
 public class TicketController {
 
     private final TicketService service;
@@ -22,6 +22,7 @@ public class TicketController {
     }
 
     @PostMapping
+@RequestMapping("/{idEvent}/tickets")
     public HttpEntity<Resource<TicketResponse>> booking(
         @PathVariable("idEvent") String idEvent,
         @RequestBody final TicketRequest ticketRequest
