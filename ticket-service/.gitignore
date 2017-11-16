@@ -49,3 +49,5 @@ target
 
 # mongodb
 data/
+
+src/test/gatling/results
