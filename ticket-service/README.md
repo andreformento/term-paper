@@ -10,3 +10,8 @@
 
 - Create Docker image: `$ gradle buildDocker`
 - Run: `$ docker run --rm -d -p 8080:8080 andreformento/realtimeticket-ticketservice`
+- Publish Docker image
+```bash
+$ docker login
+$ docker push andreformento/realtimeticket-ticketservice
+```
