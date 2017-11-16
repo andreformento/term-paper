@@ -36,15 +36,14 @@ public class TicketControllerTest {
     }
 
     @Test
-    public void shouldCreateProperty() {
+    public void shouldBooking() {
         final String json = "{\"idUser\": \"uuid123\"}";
         final String idEvent = "uuid456";
 
         given.
             body(json).
             when().
-//            post("/events/{idEvent}/tickets", idEvent).
-    post("/events/" + idEvent + "/tickets").
+            post("/events/" + idEvent + "/tickets").
             then().
             statusCode(is(HttpStatus.CREATED.value())).
             content("idEvent", equalTo(idEvent)).
