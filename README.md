@@ -8,6 +8,14 @@ Implementation of [term paper (just in Portuguese)](https://github.com/andreform
 - Run: `docker-compose up -d`
 - Stop: `docker-compose down`
 
+### Test
+
+- After your services is runnning, run this
+
+```bash
+docker-compose --file docker-compose-test.yml up
+```
+
 ## What to do
 
 - Booking an event

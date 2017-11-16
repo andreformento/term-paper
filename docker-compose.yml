@@ -3,6 +3,9 @@ version: "3.1"
 services:
   ticket:
     image: andreformento/realtimeticket-ticketservice:latest
+    container_name: ticketservice
+    networks:
+      - ticket-net
     ports:
       - 8080:8080
     depends_on:
@@ -17,6 +20,12 @@ services:
       - 27017:27017
     volumes:
       - data-mongo:/data/db
+    networks:
+      - ticket-net
 
 volumes:
   data-mongo:
+
+networks:
+  ticket-net:
+    driver: bridge
