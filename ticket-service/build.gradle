@@ -4,14 +4,10 @@ buildscript {
     }
     repositories {
         mavenCentral()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath('se.transmode.gradle:gradle-docker:1.2')
-        classpath "gradle.plugin.com.github.lkishalmi.gatling:gradle-gatling-plugin:0.7.1"
     }
 }
 
@@ -20,7 +16,6 @@ apply plugin: 'eclipse'
 apply plugin: 'jacoco'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'docker'
-apply plugin: "com.github.lkishalmi.gatling"
 
 group = 'andreformento'
 //version = '0.0.1-SNAPSHOT'
@@ -66,23 +61,4 @@ dependencies {
     testCompile('io.rest-assured:spring-mock-mvc:3.0.3')
 
     testCompile("de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.0.0")
-
-    gatling 'com.google.code.gson:gson:2.8.0'
-    gatlingCompile 'org.apache.commons:commons-lang3:3.4'
-//    gatlingRuntime 'cglib:cglib-nodep:3.2.0'
-}
-
-project.sourceSets {
-    gatling {
-        scala.srcDirs = ['src/test/gatling']
-        resources.srcDirs = ['src/test/gatling/user-files/simulations', 'src/test/gatling/user-files/data', 'src/test/gatling/user-files/body', 'src/test/gatling/conf']
-    }
-}
-
-gatling {
-    sourceRoot = 'src/test/gatling'
-    simulationsDir = 'user-files/simulations'
-    dataDir = 'user-files/data'
-    bodiesDir = 'user-files/bodies'
-    confDir = 'conf'
 }

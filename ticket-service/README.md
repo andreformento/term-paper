@@ -35,5 +35,3 @@ docker run -it --rm \
            -v $BASE_PATH/results:/opt/gatling/results \
            denvazh/gatling
 ```
-
-- Run gatling local: `gradle gatlingRun`
