@@ -8,15 +8,19 @@
 
 ## How to
 
-- Create Docker image: `gradle buildDocker`
+### Docker
 
-- Run: `docker run --rm -i -p 8080:8080 andreformento/realtimeticket-ticketservice` or -d
+- Create `gradle buildDocker`
 
-- Publish Docker image
+- Run `docker run --rm -i -p 8080:8080 andreformento/realtimeticket-ticketservice` or -d
+
+- Publish
 ```bash
 docker login
 docker push andreformento/realtimeticket-ticketservice
 ```
+
+### Application
 
 - Booking an event
 
