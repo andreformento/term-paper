@@ -5,16 +5,24 @@ Implementation of [term paper (just in Portuguese)](https://github.com/andreform
 ## How to
 
 - Build all: `./build.sh`
+
+### Docker
+
 - Run: `docker-compose up -d`
 - Stop: `docker-compose down`
 
-### Test
+#### Test
 
 - After your services is runnning, run this
 
 ```bash
 docker-compose --file docker-compose-test.yml up
 ```
+
+### Kubernetes
+
+TODO
+
 
 ## What to do
 

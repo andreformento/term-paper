@@ -8,11 +8,7 @@
 
 ## How to
 
-### Docker
-
 - Create `gradle buildDocker`
-
-- Run `docker run --rm -i -p 8080:8080 andreformento/realtimeticket-ticketservice` or -d
 
 - Publish
 ```bash
@@ -20,7 +16,51 @@ docker login
 docker push andreformento/realtimeticket-ticketservice
 ```
 
-### Application
+- (Requirement) Database `docker run --name mongodb --rm -d -p 27017:27017 mongo:3.4`
+
+### Run with Docker
+
+- Run
+
+```bash
+docker run \
+       --link=mongodb \
+       --rm -d \
+       -p 8080:8080 \
+       -e SPRING_DATA_MONGODB_URI='mongodb://mongodb/test' \
+       --name realtimeticket-ticketservice \
+       andreformento/realtimeticket-ticketservice
+```
+
+- Show all `docker ps -a`
+
+- Kill all `docker kill mongodb realtimeticket-ticketservice`
+
+### Run with Kubernetes
+
+- Initilialize `minikube start`
+
+- Run application
+```bash
+kubectl run \
+        --image=andreformento/realtimeticket-ticketservice \
+        realtimeticket-ticketservice-app \
+        --port=8080 \
+        --env="SPRING_DATA_MONGODB_URI='mongodb://mongodb/test'"
+```
+
+- Expose application
+```bash
+kubectl expose deployment realtimeticket-ticketservice-app \
+        --port=8080 \
+        --name=realtimeticket-ticketservice-http
+```
+
+- Show all `kubectl get po -a`
+
+- Kill all `kubectl delete deployment realtimeticket-ticketservice-app && docker kill mongodb`
+
+### Use application
 
 - Booking an event
 
@@ -39,3 +79,6 @@ docker run -it --rm \
            -v $BASE_PATH/results:/opt/gatling/results \
            denvazh/gatling
 ```
+
+## References
+- https://kubernetes.io/docs/user-guide/docker-cli-to-kubectl/#docker-run
