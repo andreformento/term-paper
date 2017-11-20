@@ -46,6 +46,7 @@ kubectl run \
         --image=andreformento/realtimeticket-ticketservice \
         realtimeticket-ticketservice-app \
         --port=8080 \
+        --rm
         --env="SPRING_DATA_MONGODB_URI='mongodb://mongodb/test'"
 ```
 
@@ -59,6 +60,8 @@ kubectl expose deployment realtimeticket-ticketservice-app \
 - Show all `kubectl get po -a`
 
 - Kill all `kubectl delete deployment realtimeticket-ticketservice-app && docker kill mongodb`
+
+- Stop `minikube stop`
 
 ### Use application
 
