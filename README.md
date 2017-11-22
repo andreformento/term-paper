@@ -23,6 +23,26 @@ docker-compose --file docker-compose-test.yml up
 
 TODO
 
+### Redis
+
+#### Init and kill
+
+```bash
+docker run --rm --name my-redis -d redis
+docker exec -it my-redis bash
+redis-cli
+docker stop my-redis
+```
+
+#### Commands
+
+- List all `keys *`
+
+#### References
+
+- https://redis.io/commands
+- https://www.concretepage.com/spring-4/spring-data-redis-example
+- https://projects.spring.io/spring-data-redis/
 
 ## What to do
 
