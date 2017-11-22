@@ -4,13 +4,13 @@ services:
   ticket-test:
     image: denvazh/gatling:latest
     external_links:
-      - ticketservice
+      - ticketreservation
     networks:
       - ticket-net
     volumes:
-      - ./ticket-service-gatling/conf:/opt/gatling/conf
-      - ./ticket-service-gatling/user-files:/opt/gatling/user-files
-      - ./ticket-service-gatling/results:/opt/gatling/results
+      - ./ticket-reservation-gatling/conf:/opt/gatling/conf
+      - ./ticket-reservation-gatling/user-files:/opt/gatling/user-files
+      - ./ticket-reservation-gatling/results:/opt/gatling/results
 
 networks:
   ticket-net:

@@ -2,8 +2,8 @@ version: "3.1"
 
 services:
   ticket:
-    image: andreformento/realtimeticket-ticketservice:latest
-    container_name: ticketservice
+    image: andreformento/realtimeticket-ticketreservation:latest
+    container_name: ticketreservation
     networks:
       - ticket-net
     ports:
