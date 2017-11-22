@@ -1,0 +1,64 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.8.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath('se.transmode.gradle:gradle-docker:1.2')
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'jacoco'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'docker'
+
+group = 'andreformento'
+//version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+jar {
+    baseName = 'realtimeticket'
+    version = '1.0.0-SNAPSHOT' //${project.version}
+}
+
+task buildDocker(type: Docker, dependsOn: build) {
+    push = false
+    applicationName = jar.baseName + '-ticketreservation'
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from jar
+            into stageDir
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-hateoas')
+    compile('org.springframework.boot:spring-boot-starter-data-rest')
+    compile("org.springframework.boot:spring-boot-starter-data-mongodb")
+    compile('com.google.guava:guava:21.0')
+    compile('com.fasterxml.jackson.datatype:jackson-datatype-jdk8')
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('nl.jqno.equalsverifier:equalsverifier:2.3')
+    testCompile("org.assertj:assertj-core:3.8.0")
+
+    testCompile('net.javacrumbs.json-unit:json-unit-fluent:1.23.0')
+    testCompile('io.rest-assured:rest-assured:3.0.3')
+    testCompile('io.rest-assured:json-schema-validator:3.0.3')
+    testCompile('io.rest-assured:spring-mock-mvc:3.0.3')
+
+    testCompile("de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.0.0")
+}

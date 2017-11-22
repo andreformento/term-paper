@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-cd ticket-service
+cd ticket-reservation
 gradle clean
 gradle buildDocker
 cd ..

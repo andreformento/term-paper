@@ -19,6 +19,12 @@ Implementation of [term paper (just in Portuguese)](https://github.com/andreform
 docker-compose --file docker-compose-test.yml up
 ```
 
+- And stop
+
+```bash
+docker-compose --file docker-compose-test.yml down
+```
+
 ### Kubernetes
 
 TODO
