@@ -1,16 +1,21 @@
 package com.formento.realtimeticket.ticketreservation.reservation.api.v1;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import com.google.common.collect.Range;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
-import org.joda.time.Interval;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -18,7 +23,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.http.HttpStatus;
@@ -29,15 +33,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class TicketReservationControllerTest {
+
+    private static final String KEY_EVENT = "e-uuidEvent";
 
     @Autowired
     private WebApplicationContext context;
@@ -78,10 +79,10 @@ public class TicketReservationControllerTest {
 
         redisTemplate.opsForValue().set("mykey", 15l);
         Long mykey = redisTemplate.opsForValue().get("mykey");
-        assertEquals(Long.valueOf(15l),mykey);
+        assertEquals(Long.valueOf(15l), mykey);
 
         Long totalAfterIncrement = redisTemplate.opsForValue().increment("mykey", 10l);
-        assertEquals(Long.valueOf(25l),totalAfterIncrement);
+        assertEquals(Long.valueOf(25l), totalAfterIncrement);
     }
 
     @Test
@@ -94,14 +95,126 @@ public class TicketReservationControllerTest {
         redisTemplateInteger.setValueSerializer(new GenericToStringSerializer<Integer>(Integer.class));
         redisTemplateInteger.afterPropertiesSet();
 
-        String key= "events";
+        String key = "events";
         String hash = "event123";
 
-        redisTemplateInteger.opsForHash().put(key, hash, 500);
-        assertEquals(500, redisTemplateInteger.opsForHash().get(key, hash));
+        List<Integer> range = IntStream.range(0, 500).boxed().collect(Collectors.toList());
+        final Integer[] array = range.toArray(new Integer[range.size()]);
+        final Long result = redisTemplateInteger.opsForSet().add(key, array);
+        assertEquals(Long.valueOf(500L), result);
+        final Set<Integer> members = redisTemplateInteger.opsForSet().members(key);
+        assertEquals(500, members.size());
 
-        redisTemplateInteger.opsForHash().increment(key, hash,-25);
-        assertEquals(475, redisTemplateInteger.opsForHash().get(key, hash));
+        redisTemplateInteger.opsForSet().pop(key);
+        final Set<Integer> membersAfterPop = redisTemplateInteger.opsForSet().members(key);
+        assertEquals(499, membersAfterPop.size());
+    }
+
+    @Test
+    public void shouldRegisterEvent() {
+        final RedisTemplate<String, Integer> redisTemplateInteger = new RedisTemplate<String, Integer>();
+        redisTemplateInteger.setConnectionFactory(jedisConnectionFactory);
+        redisTemplateInteger.setValueSerializer(new GenericToStringSerializer<Integer>(Integer.class));
+        redisTemplateInteger.afterPropertiesSet();
+
+        redisTemplateInteger.opsForSet().getOperations().delete(KEY_EVENT);
+
+        final List<Integer> range = IntStream.range(1, 6).boxed().collect(Collectors.toList());
+
+        final Integer[] array = range.toArray(new Integer[range.size()]);
+
+        final Long result = redisTemplateInteger.opsForSet().add(KEY_EVENT, array);
+        assertEquals(Long.valueOf(5L), result);
+        final Set<Integer> members = redisTemplateInteger.opsForSet().members(KEY_EVENT);
+        assertEquals(5, members.size());
+    }
+
+    @Test
+    public void shouldBooking1Ticket() {
+        shouldRegisterEvent();
+
+        final RedisTemplate<String, Integer> redisTemplateInteger = new RedisTemplate<String, Integer>();
+        redisTemplateInteger.setConnectionFactory(jedisConnectionFactory);
+        redisTemplateInteger.setValueSerializer(new GenericToStringSerializer<Integer>(Integer.class));
+        redisTemplateInteger.afterPropertiesSet();
+
+        assertThat(redisTemplateInteger.opsForSet().pop(KEY_EVENT)).isGreaterThan(0);
+        final Set<Integer> membersAfterPop = redisTemplateInteger.opsForSet().members(KEY_EVENT);
+        assertEquals(4, membersAfterPop.size());
+    }
+
+    @Test
+    public void shouldBooking4Ticket() {
+        shouldRegisterEvent();
+
+        final RedisTemplate<String, Integer> redisTemplateInteger = new RedisTemplate<String, Integer>();
+        redisTemplateInteger.setConnectionFactory(jedisConnectionFactory);
+        redisTemplateInteger.setValueSerializer(new GenericToStringSerializer<Integer>(Integer.class));
+        redisTemplateInteger.afterPropertiesSet();
+
+        assertThat(redisTemplateInteger.opsForSet().pop(KEY_EVENT)).isGreaterThan(0);
+        assertThat(redisTemplateInteger.opsForSet().pop(KEY_EVENT)).isGreaterThan(0);
+        assertThat(redisTemplateInteger.opsForSet().pop(KEY_EVENT)).isGreaterThan(0);
+        assertThat(redisTemplateInteger.opsForSet().pop(KEY_EVENT)).isGreaterThan(0);
+
+        final Set<Integer> membersAfterPop = redisTemplateInteger.opsForSet().members(KEY_EVENT);
+        assertEquals(1, membersAfterPop.size());
+    }
+
+    @Test
+    public void shouldBookingAllTickets() {
+        shouldRegisterEvent();
+
+        final RedisTemplate<String, Integer> redisTemplateInteger = new RedisTemplate<String, Integer>();
+        redisTemplateInteger.setConnectionFactory(jedisConnectionFactory);
+        redisTemplateInteger.setValueSerializer(new GenericToStringSerializer<Integer>(Integer.class));
+        redisTemplateInteger.afterPropertiesSet();
+
+        assertThat(redisTemplateInteger.opsForSet().pop(KEY_EVENT)).isGreaterThan(0);
+        assertThat(redisTemplateInteger.opsForSet().pop(KEY_EVENT)).isGreaterThan(0);
+        assertThat(redisTemplateInteger.opsForSet().pop(KEY_EVENT)).isGreaterThan(0);
+        assertThat(redisTemplateInteger.opsForSet().pop(KEY_EVENT)).isGreaterThan(0);
+        assertThat(redisTemplateInteger.opsForSet().pop(KEY_EVENT)).isGreaterThan(0);
+        assertThat(redisTemplateInteger.opsForSet().pop(KEY_EVENT)).isNull();
+        assertThat(redisTemplateInteger.opsForSet().pop(KEY_EVENT)).isNull();
+
+        final Set<Integer> membersAfterPop = redisTemplateInteger.opsForSet().members(KEY_EVENT);
+        assertEquals(0, membersAfterPop.size());
+    }
+
+    @Test
+    public void shouldFluxAllBooking() throws InterruptedException {
+        shouldRegisterEvent();
+
+        final RedisTemplate<String, Integer> redisTemplateInteger = new RedisTemplate<String, Integer>();
+        redisTemplateInteger.setConnectionFactory(jedisConnectionFactory);
+        redisTemplateInteger.setValueSerializer(new GenericToStringSerializer<Integer>(Integer.class));
+        redisTemplateInteger.afterPropertiesSet();
+
+        final RedisTemplate<String, String> redisTemplateString = new RedisTemplate<String, String>();
+        redisTemplateString.setConnectionFactory(jedisConnectionFactory);
+        redisTemplateString.setValueSerializer(new GenericToStringSerializer<String>(String.class));
+        redisTemplateString.afterPropertiesSet();
+
+        final Integer count = 3;
+        final String userId = "userId1";
+
+        final Long size = redisTemplateInteger.opsForSet().size(KEY_EVENT);
+
+        for (int i = 1; i < count; i++) {
+            assertThat(redisTemplateInteger.opsForSet().pop(KEY_EVENT)).isGreaterThan(0);
+            assertThat(redisTemplateInteger.opsForSet().size(KEY_EVENT)).isEqualTo(size - i);
+            final String key = KEY_EVENT + "-" + i;
+            redisTemplateString.opsForValue().set(key, userId);
+            redisTemplateString.expire(key, 500, TimeUnit.MILLISECONDS);
+            assertThat(redisTemplateString.hasKey(key)).isTrue();
+        }
+
+        Thread.sleep(600);
+        for (int i = 1; i < count; i++) {
+            final String key = KEY_EVENT + "-" + i;
+            assertThat(redisTemplateString.hasKey(key)).isFalse();
+        }
     }
 
     @Test
