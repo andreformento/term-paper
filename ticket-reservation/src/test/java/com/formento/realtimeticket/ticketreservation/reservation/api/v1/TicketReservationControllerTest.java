@@ -8,11 +8,14 @@ import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
@@ -30,8 +33,8 @@ public class TicketReservationControllerTest {
     private WebApplicationContext context;
     private MockMvcRequestSpecification given;
 
-//    @Autowired
-//    private RedisOperations<String, String> redisOperations;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Before
     public void init() {
@@ -39,9 +42,15 @@ public class TicketReservationControllerTest {
         given = RestAssuredMockMvc.given().mockMvc(mvc).contentType(MediaType.APPLICATION_JSON_VALUE).accept(ContentType.JSON);
     }
 
+    // https://github.com/eugenp/tutorials/blob/master/persistence-modules/spring-data-redis/src/main/java/com/baeldung/spring/data/redis/repo/StudentRepositoryImpl.java
     @Test
+    public void testRedis() {
+        redisTemplate.opsForValue().set("key1", 0L);
+    }
+
+    @Test
+    @Ignore
     public void shouldBooking() {
-        //redisOperations.opsForValue().set("key", "value");
 
         final String json = "{\"idUser\": \"uuid123\", \"count\": 3}";
         final String idEvent = "uuid456";

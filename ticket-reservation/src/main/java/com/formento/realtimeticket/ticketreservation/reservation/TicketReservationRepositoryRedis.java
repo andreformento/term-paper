@@ -26,6 +26,8 @@ public class TicketReservationRepositoryRedis implements TicketReservationReposi
     public Long increment(final Long delta) {
         final RedisAtomicReservation redisAtomicReservation = new RedisAtomicReservation(counterKey, jedisConnectionFactory);
 
+
+
         return redisAtomicReservation.compareAndIncrement(delta, d -> d != null && d <= 100);
     }
 
