@@ -85,6 +85,26 @@ public class TicketReservationControllerTest {
     }
 
     @Test
+    public void testRedisEvents() {
+        // https://redis.io/commands/sadd
+        // https://redis.io/commands/spop
+
+        final RedisTemplate<String, Integer> redisTemplateInteger = new RedisTemplate<String, Integer>();
+        redisTemplateInteger.setConnectionFactory(jedisConnectionFactory);
+        redisTemplateInteger.setValueSerializer(new GenericToStringSerializer<Integer>(Integer.class));
+        redisTemplateInteger.afterPropertiesSet();
+
+        String key= "events";
+        String hash = "event123";
+
+        redisTemplateInteger.opsForHash().put(key, hash, 500);
+        assertEquals(500, redisTemplateInteger.opsForHash().get(key, hash));
+
+        redisTemplateInteger.opsForHash().increment(key, hash,-25);
+        assertEquals(475, redisTemplateInteger.opsForHash().get(key, hash));
+    }
+
+    @Test
     @Ignore
     public void shouldBooking() {
 
