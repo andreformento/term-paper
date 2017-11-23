@@ -34,9 +34,8 @@ TODO
 #### Init and kill
 
 ```bash
-docker run --rm --name my-redis -d redis
-docker exec -it my-redis bash
-redis-cli
+docker run --rm --name my-redis -d redis:alpine
+docker exec -it my-redis redis-cli
 docker stop my-redis
 ```
 
