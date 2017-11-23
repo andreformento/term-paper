@@ -43,6 +43,17 @@ docker stop my-redis
 
 - List all `keys *`
 
+```bash
+RPUSH event123-available u1 u2 u3 u4 u5 u6
+RPOPLPUSH event123-available event123-reserved
+LLEN event123-available
+LRANGE event123-available 0 -1
+
+DEL event123-available
+SADD event123-available u1 u2 u3 u4 u5 u6
+SPOP event123-available
+```
+
 #### References
 
 - https://redis.io/commands
