@@ -2,6 +2,7 @@ package com.formento.realtimeticket.ticketreservation.reservation.api.v1;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -52,6 +53,7 @@ public class TicketReservationControllerTest {
 
     // https://github.com/eugenp/tutorials/blob/master/persistence-modules/spring-data-redis/src/main/java/com/baeldung/spring/data/redis/repo/StudentRepositoryImpl.java
     @Test
+    @Ignore
     public void testRedis() {
         final RedisTemplate<String, Long> redisTemplate = new RedisTemplate<String, Long>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory);
@@ -65,6 +67,21 @@ public class TicketReservationControllerTest {
         assertNotNull(counters);
         Object counters2 = redisTemplate.opsForSet().pop("counters2");
         assertNotNull(counters2);
+    }
+
+    @Test
+    public void testRedis2() {
+        final RedisTemplate<String, Long> redisTemplate = new RedisTemplate<String, Long>();
+        redisTemplate.setConnectionFactory(jedisConnectionFactory);
+        redisTemplate.setValueSerializer(new GenericToStringSerializer<Long>(Long.class));
+        redisTemplate.afterPropertiesSet();
+
+        redisTemplate.opsForValue().set("mykey", 15l);
+        Long mykey = redisTemplate.opsForValue().get("mykey");
+        assertEquals(Long.valueOf(15l),mykey);
+
+        Long totalAfterIncrement = redisTemplate.opsForValue().increment("mykey", 10l);
+        assertEquals(Long.valueOf(25l),totalAfterIncrement);
     }
 
     @Test
