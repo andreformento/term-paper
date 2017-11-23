@@ -38,4 +38,8 @@ public class Event implements Serializable {
         return Objects.hash(id);
     }
 
+    public Boolean isValidSequence(final Long sequence) {
+        return sequence <= limit;
+    }
+
 }

@@ -1,13 +1,12 @@
 package com.formento.realtimeticket.ticketreservation.reservation;
 
-import java.beans.ConstructorProperties;
-import java.io.Serializable;
+import static java.util.Optional.empty;
+
 import java.util.Objects;
+import java.util.Optional;
 import javax.validation.constraints.NotNull;
 
-public class TicketReservation implements Serializable {
-
-    private static final long serialVersionUID = 2786181361391040157L;
+public class TicketReservation {
 
     @NotNull
     private final String idEvent;
@@ -15,10 +14,26 @@ public class TicketReservation implements Serializable {
     @NotNull
     private final String idUser;
 
-    @ConstructorProperties({"idEvent", "idUser"})
+    @NotNull
+    private final Long count;
+
+    @NotNull
+    private final Optional<Long> sequence;
+
     public TicketReservation(String idEvent, String idUser) {
         this.idEvent = idEvent;
         this.idUser = idUser;
+        this.sequence = empty();
+    }
+
+    public TicketReservation(TicketReservation ticketReservation, Long sequence) {
+        this(ticketReservation, Optional.of(sequence));
+    }
+
+    public TicketReservation(TicketReservation ticketReservation, Optional<Long> sequence) {
+        this.idEvent = ticketReservation.getIdEvent();
+        this.idUser = ticketReservation.getIdUser();
+        this.sequence = sequence;
     }
 
     public String getIdEvent() {
@@ -27,6 +42,10 @@ public class TicketReservation implements Serializable {
 
     public String getIdUser() {
         return idUser;
+    }
+
+    public Optional<Long> getSequence() {
+        return sequence;
     }
 
     @Override

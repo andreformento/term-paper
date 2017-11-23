@@ -1,9 +1,7 @@
 package com.formento.realtimeticket.ticketreservation.reservation;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+interface TicketReservationRepository {
 
-@Repository
-interface TicketReservationRepository extends CrudRepository<TicketReservation, String> {
+    Long increment(final Long delta);
 
 }
