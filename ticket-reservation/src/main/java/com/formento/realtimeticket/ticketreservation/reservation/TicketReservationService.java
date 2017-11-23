@@ -2,6 +2,8 @@ package com.formento.realtimeticket.ticketreservation.reservation;
 
 import com.formento.realtimeticket.ticketreservation.event.Event;
 import com.formento.realtimeticket.ticketreservation.event.EventService;
+import com.formento.realtimeticket.ticketreservation.exception.TicketReservationFullException;
+import com.formento.realtimeticket.ticketreservation.reservation.TicketReservation.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,15 +24,15 @@ public class TicketReservationService {
         // validate if available
 
         final Event event = eventService.getById(ticketReservation.getIdEvent());
-        final Long ticketSequence = ticketReservationRepository.increment();
+        final Long count = ticketReservationRepository.increment(ticketReservation.getCount());
 
-        if (event.isValidSequence(ticketSequence)) {
-            return new TicketReservation(ticketReservation, ticketSequence);
+        if (event.isValidSequence(count)) {
+            return new TicketReservation(ticketReservation, Status.RESERVED);
         } else {
-            // throw
-        }
+            ticketReservationRepository.decrement(ticketReservation.getCount());
 
-//        return ticketReservationRepository.save(ticketReservation);
+            throw new TicketReservationFullException(new TicketReservation(ticketReservation, Status.FULL));
+        }
     }
 
 }

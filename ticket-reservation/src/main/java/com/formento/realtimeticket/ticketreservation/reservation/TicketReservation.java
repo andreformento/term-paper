@@ -1,9 +1,6 @@
 package com.formento.realtimeticket.ticketreservation.reservation;
 
-import static java.util.Optional.empty;
-
 import java.util.Objects;
-import java.util.Optional;
 import javax.validation.constraints.NotNull;
 
 public class TicketReservation {
@@ -18,22 +15,24 @@ public class TicketReservation {
     private final Long count;
 
     @NotNull
-    private final Optional<Long> sequence;
+    private final Status status;
 
-    public TicketReservation(String idEvent, String idUser) {
+    enum Status {
+        PRE_RESERVE, RESERVED, FULL
+    }
+
+    public TicketReservation(String idEvent, String idUser, Long count) {
         this.idEvent = idEvent;
         this.idUser = idUser;
-        this.sequence = empty();
+        this.count = count;
+        this.status = Status.PRE_RESERVE;
     }
 
-    public TicketReservation(TicketReservation ticketReservation, Long sequence) {
-        this(ticketReservation, Optional.of(sequence));
-    }
-
-    public TicketReservation(TicketReservation ticketReservation, Optional<Long> sequence) {
-        this.idEvent = ticketReservation.getIdEvent();
-        this.idUser = ticketReservation.getIdUser();
-        this.sequence = sequence;
+    public TicketReservation(TicketReservation ticketReservation, Status status) {
+        this.idEvent = ticketReservation.idEvent;
+        this.idUser = ticketReservation.idUser;
+        this.count = ticketReservation.count;
+        this.status = status;
     }
 
     public String getIdEvent() {
@@ -44,8 +43,12 @@ public class TicketReservation {
         return idUser;
     }
 
-    public Optional<Long> getSequence() {
-        return sequence;
+    public Long getCount() {
+        return count;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 
     @Override

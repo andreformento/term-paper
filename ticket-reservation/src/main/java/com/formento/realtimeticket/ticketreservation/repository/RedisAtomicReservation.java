@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -187,22 +188,23 @@ public class RedisAtomicReservation extends Number implements Serializable, Boun
         return compareAndSet(expect, update, Objects::equals);
     }
 
-    public boolean compareAndIncrement(final long expect, final long count, BiFunction<Long, Long, Boolean> comparator) {
-        return generalOps.execute(new SessionCallback<Boolean>() {
+    public Long compareAndIncrement(final long delta, Function<Long, Boolean> comparator) {
+        return generalOps.execute(new SessionCallback<Long>() {
 
             @SuppressWarnings("unchecked")
-            public Boolean execute(RedisOperations operations) {
+            public Long execute(RedisOperations operations) {
                 for (; ; ) {
                     operations.watch(Collections.singleton(key));
-                    if (comparator.apply(expect, get())) {
+                    final Long t = get();
+                    if (comparator.apply(t)) {
                         generalOps.multi();
-                        incrementAndGet(count);
+                        final Long result = incrementAndGet(delta);
                         if (operations.exec() != null) {
-                            return true;
+                            return result;
                         }
                     }
                     {
-                        return false;
+                        return -1L;
                     }
                 }
             }
@@ -246,8 +248,8 @@ public class RedisAtomicReservation extends Number implements Serializable, Boun
         return incrementAndGet(1);
     }
 
-    public long incrementAndGet(long count) {
-        return operations.increment(key, count);
+    public Long incrementAndGet(long delta) {
+        return operations.increment(key, delta);
     }
 
     /**

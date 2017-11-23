@@ -5,8 +5,9 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Configuration;
 
-@TestConfiguration
+@Configuration
 public class EmbededRedisTestConfiguration {
 
     private final redis.embedded.RedisServer redisServer;

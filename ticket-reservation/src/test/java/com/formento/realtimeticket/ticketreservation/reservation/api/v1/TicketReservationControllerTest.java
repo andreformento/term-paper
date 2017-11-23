@@ -43,7 +43,7 @@ public class TicketReservationControllerTest {
     public void shouldBooking() {
         //redisOperations.opsForValue().set("key", "value");
 
-        final String json = "{\"idUser\": \"uuid123\"}";
+        final String json = "{\"idUser\": \"uuid123\", \"count\": 3}";
         final String idEvent = "uuid456";
 
         given.

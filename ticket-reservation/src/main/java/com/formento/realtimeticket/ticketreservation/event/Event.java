@@ -39,7 +39,7 @@ public class Event implements Serializable {
     }
 
     public Boolean isValidSequence(final Long sequence) {
-        return sequence <= limit;
+        return sequence != null && sequence <= limit;
     }
 
 }
