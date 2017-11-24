@@ -1,9 +1,11 @@
 buildscript {
     ext {
-        springBootVersion = '1.5.8.RELEASE'
+        springBootVersion = '2.0.0.M6'
     }
     repositories {
         mavenCentral()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -15,6 +17,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'jacoco'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 apply plugin: 'docker'
 
 group = 'andreformento'
@@ -26,7 +29,13 @@ jar {
     version = '1.0.0-SNAPSHOT' //${project.version}
 }
 
+task copyJar(type: Copy) {
+    from        "build/libs/ticket-reservation.jar"
+    into        'build/docker'
+}
+
 task buildDocker(type: Docker, dependsOn: build) {
+    dependsOn copyJar
     push = false
     applicationName = jar.baseName + '-ticketreservation'
     dockerfile = file('src/main/docker/Dockerfile')
@@ -40,6 +49,8 @@ task buildDocker(type: Docker, dependsOn: build) {
 
 repositories {
     mavenCentral()
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
 }
 
 
@@ -47,12 +58,14 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-hateoas')
     compile('org.springframework.boot:spring-boot-starter-data-redis')
+    compile('org.springframework.boot:spring-boot-starter-webflux')
     compile('com.google.guava:guava:21.0')
     compile('com.fasterxml.jackson.datatype:jackson-datatype-jdk8')
     compile('redis.clients:jedis:2.9.0')
     compile('org.springframework.boot:spring-boot-starter-actuator')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('io.projectreactor:reactor-test')
     testCompile('nl.jqno.equalsverifier:equalsverifier:2.3')
     testCompile("org.assertj:assertj-core:3.8.0")
 
