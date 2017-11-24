@@ -62,10 +62,18 @@ SPOP event123-available
 
 ## What to do
 
+- Create an reservation event
+
+```bash
+curl -X POST 'http://localhost:8080/event-reservations' \
+     -H 'Content-Type: application/json' \
+     -d '{"eventId": "uuid456", "limit": 30}'
+```
+
 - Booking an event
 
 ```bash
 curl -X POST 'http://localhost:8080/events/uuid456/tickets' \
      -H 'Content-Type: application/json' \
-     -d '{"idUser": "uuid123"}'
+     -d '{"idUser": "uuid123", "count": 3}'
 ```

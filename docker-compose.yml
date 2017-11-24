@@ -9,22 +9,24 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - mongodb
+      - redisdb
     links:
-      - mongodb
+      - redisdb
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongodb/test
-  mongodb:
-    image: mongo:3.4
+      SPRING_REDIS_HOSTNAME: redisdb
+      SPRING_REDIS_PORT: 6379
+  redisdb:
+    image: redis:alpine
+    hostname: redisdb
     ports:
-      - 27017:27017
+      - 6379:6379
     volumes:
-      - data-mongo:/data/db
+      - data-redis:/data/db
     networks:
       - ticket-net
 
 volumes:
-  data-mongo:
+  data-redis:
 
 networks:
   ticket-net:

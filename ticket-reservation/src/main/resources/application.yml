@@ -1,0 +1,3 @@
+spring.redis:
+  host: ${SPRING_REDIS_HOSTNAME}
+  port: ${SPRING_REDIS_PORT}
