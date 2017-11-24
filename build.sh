@@ -2,5 +2,5 @@
 
 cd ticket-reservation
 gradle clean
-gradle buildDocker
+gradle buildDocker # -x test
 cd ..

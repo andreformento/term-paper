@@ -32,31 +32,10 @@ class BasicSimulation extends Simulation { // 3
          .body(StringBody("""{ "idUser": "uuid123", "count": 3}"""))
          .asJSON
       )
-    .pause(5) // 10
+    .pause(0) // 10
 
-  before {
-    // create event
-
-
-    println("""Create event with:
-curl -X POST 'http://localhost:8080/event-reservations' -H 'Content-Type: application/json' -d '{"eventId": "uuid456", "limit": 90005}'
-""")
-  }
-
-  setUp( // 11
-    scn.inject(
-      // https://gatling.io/docs/2.3/general/simulation_setup/
-      // nothingFor(2 /*seconds*/), // 1
-      // atOnceUsers(10), // 2
-      // rampUsers(10) over(5 /*seconds*/), // 3
-      // constantUsersPerSec(20) during(15 /*seconds*/), // 4
-      // constantUsersPerSec(20) during(15 /*seconds*/) randomized, // 5
-      // rampUsersPerSec(10) to 20 during(1 /*minutes*/), // 6
-      // rampUsersPerSec(10) to 20 during(1 /*minutes*/) randomized, // 7
-      // splitUsers(1000) into(rampUsers(10) over(10 /*seconds*/)) separatedBy(10 /*seconds*/), // 8
-      // splitUsers(1000) into(rampUsers(10) over(10 /*seconds*/)) separatedBy atOnceUsers(30), // 9
-      heavisideUsers(3000) over(5 /*seconds*/) // 10
-    )
+  setUp(
+    scn.inject(heavisideUsers(3000) over(5 /*seconds*/))
   ).protocols(httpConf) // 13
 
 }
