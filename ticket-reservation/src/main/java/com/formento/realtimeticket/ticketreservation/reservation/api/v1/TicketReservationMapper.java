@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component;
 class TicketReservationMapper {
 
     HttpEntity<Resource<TicketReservationResponse>> mapToResponse(final TicketReservation ticketReservation) {
-        return new ResponseEntity<>(new Resource<>(new TicketReservationResponse(ticketReservation), linkTo(TicketReservationController.class).withSelfRel()), HttpStatus.CREATED);
+        return new ResponseEntity<>(
+            new Resource<>(new TicketReservationResponse(ticketReservation), linkTo(TicketReservationController.class).withSelfRel()),
+            HttpStatus.CREATED);
     }
 
     TicketReservation mapFromRequest(final String idEvent, final TicketReservationRequest ticketReservationRequest) {

@@ -1,7 +1,6 @@
 package com.formento.realtimeticket.ticketreservation.reservation;
 
 import com.formento.realtimeticket.ticketreservation.repository.RedisTemplateFactory;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;

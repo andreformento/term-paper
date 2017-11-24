@@ -5,9 +5,7 @@ import com.formento.realtimeticket.ticketreservation.repository.RedisTemplateFac
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import java.util.Set;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -50,9 +48,11 @@ class EventReservationRepository {
 
     public Set<String> getReservation(String eventId, Integer count) {
         final Builder<String> ticketIds = ImmutableSet.builder();
-        for (int i = 0; i < count; i ++) {
+        for (int i = 0; i < count; i++) {
             final String ticketId = redisTemplateString.opsForSet().pop(eventId);
-            if (ticketId == null) break;
+            if (ticketId == null) {
+                break;
+            }
             ticketIds.add(ticketId);
         }
 

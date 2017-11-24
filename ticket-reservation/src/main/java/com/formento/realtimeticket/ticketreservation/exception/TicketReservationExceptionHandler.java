@@ -21,6 +21,7 @@ public class TicketReservationExceptionHandler {
         LOGGER.error("Bad request: {}", e);
         return new ErrorResult(ImmutableMap.<String, String>builder().put("application error", e.getMessage()).build());
     }
+
     @ExceptionHandler(RepositoryNotFoundException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
