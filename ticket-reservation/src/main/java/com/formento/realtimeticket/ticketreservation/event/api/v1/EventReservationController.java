@@ -3,7 +3,6 @@ package com.formento.realtimeticket.ticketreservation.event.api.v1;
 import com.formento.realtimeticket.ticketreservation.event.EventReservationService;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,11 +21,7 @@ public class EventReservationController {
     }
 
     @PostMapping
-    public HttpEntity<Resource<EventReservationResponse>> booking(
-        @PathVariable("idEvent") String idEvent,
-        @RequestBody final EventReservationRequest eventReservationRequest
-    ) {
-
+    public HttpEntity<Resource<EventReservationResponse>> createEvent(@RequestBody final EventReservationRequest eventReservationRequest) {
         return mapper.mapToResponse(service.createEvent(mapper.mapFromRequest(eventReservationRequest)));
     }
 
