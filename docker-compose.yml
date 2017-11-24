@@ -8,8 +8,8 @@ services:
       - ticket-net
     ports:
       - 8080:8080
-    depends_on:
-      - redisdb
+    #depends_on:
+    #  - redisdb
     links:
       - redisdb
     environment:
@@ -18,10 +18,10 @@ services:
   redisdb:
     image: redis:alpine
     hostname: redisdb
-    ports:
-      - 6379:6379
-    volumes:
-      - data-redis:/data/db
+    #ports:
+    #  - 6378:6379
+    #volumes:
+    #  - data-redis:/data/db
     networks:
       - ticket-net
 

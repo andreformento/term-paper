@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
 
+./clean.sh
 #./build.sh
-docker-compose down
+
 docker-compose up -d
 
 printf 'Waiting for application is ready'
