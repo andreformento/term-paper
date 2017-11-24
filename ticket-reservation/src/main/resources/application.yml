@@ -1,3 +1,8 @@
 spring.redis:
   host: ${SPRING_REDIS_HOSTNAME}
   port: ${SPRING_REDIS_PORT}
+
+endpoints.beans:
+  id: springbeans
+  sensitive: false
+  enabled: true

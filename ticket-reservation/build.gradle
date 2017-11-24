@@ -50,6 +50,7 @@ dependencies {
     compile('com.google.guava:guava:21.0')
     compile('com.fasterxml.jackson.datatype:jackson-datatype-jdk8')
     compile('redis.clients:jedis:2.9.0')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('nl.jqno.equalsverifier:equalsverifier:2.3')
