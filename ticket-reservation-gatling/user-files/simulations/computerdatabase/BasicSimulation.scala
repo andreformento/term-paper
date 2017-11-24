@@ -18,13 +18,30 @@ class BasicSimulation extends Simulation { // 3
     .acceptEncodingHeader("gzip, deflate")
     .userAgentHeader("Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0")
 
-  val scn = scenario("BasicSimulation") // 7
-    .exec(http("request_1")  // 8
-         .post("/events/uuid456/tickets")
-         .body(StringBody("""{ "idUser": "uuid123"}"""))
+  val scnBefore = scenario("BasicSimulation1") // 7
+    .exec(http("create_event_reservation")  // 8
+         .post("http://ticketreservation:8080/event-reservations")
+         .body(StringBody("""{"eventId": "uuid456", "limit": 2147483646}"""))
          .asJSON
       )
     .pause(5) // 10
+
+  val scn = scenario("BasicSimulation") // 7
+    .exec(http("request_1")  // 8
+         .post("/events/uuid456/tickets")
+         .body(StringBody("""{ "idUser": "uuid123", "count": 3}"""))
+         .asJSON
+      )
+    .pause(5) // 10
+
+  before {
+    // create event
+
+
+    println("""Create event with:
+curl -X POST 'http://localhost:8080/event-reservations' -H 'Content-Type: application/json' -d '{"eventId": "uuid456", "limit": 90005}'
+""")
+  }
 
   setUp( // 11
     scn.inject(
@@ -38,7 +55,7 @@ class BasicSimulation extends Simulation { // 3
       // rampUsersPerSec(10) to 20 during(1 /*minutes*/) randomized, // 7
       // splitUsers(1000) into(rampUsers(10) over(10 /*seconds*/)) separatedBy(10 /*seconds*/), // 8
       // splitUsers(1000) into(rampUsers(10) over(10 /*seconds*/)) separatedBy atOnceUsers(30), // 9
-      heavisideUsers(30000) over(20 /*seconds*/) // 10
+      heavisideUsers(3000) over(5 /*seconds*/) // 10
     )
   ).protocols(httpConf) // 13
 
