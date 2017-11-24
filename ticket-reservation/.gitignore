@@ -25,9 +25,6 @@ nbdist/
 
 ### Gradle ###
 .gradle
-gradle/
-#gradlew
-gradlew.bat
 bin/
 
 # Ignore Gradle GUI config

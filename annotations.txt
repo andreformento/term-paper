@@ -1,0 +1,57 @@
+sem reservation
+ticket-test_1  | > request count                                       3000 (OK=2825   KO=175   )
+ticket-test_1  | > min response time                                      0 (OK=17     KO=0     )
+ticket-test_1  | > max response time                                  14688 (OK=14688  KO=0     )
+ticket-test_1  | > mean response time                                  6238 (OK=6625   KO=0     )
+ticket-test_1  | > std deviation                                       3564 (OK=3306   KO=0     )
+ticket-test_1  | > response time 50th percentile                       6118 (OK=6306   KO=0     )
+ticket-test_1  | > response time 75th percentile                       9689 (OK=9748   KO=0     )
+ticket-test_1  | > response time 95th percentile                      11237 (OK=11283  KO=0     )
+ticket-test_1  | > response time 99th percentile                      12116 (OK=12124  KO=0     )
+ticket-test_1  | > mean requests/sec                                166.667 (OK=156.944 KO=9.722 )
+ticket-test_1  | ---- Response Time Distribution ------------------------------------------------
+ticket-test_1  | > t < 800 ms                                           142 (  5%)
+ticket-test_1  | > 800 ms < t < 1200 ms                                  42 (  1%)
+ticket-test_1  | > t > 1200 ms                                         2641 ( 88%)
+ticket-test_1  | > failed                                               175 (  6%)
+ticket-test_1  | ---- Errors --------------------------------------------------------------------
+ticket-test_1  | > j.n.ConnectException: connection timed out: ticketreservation/    175 (100.0%)
+
+sem reservation, set key e expire
+ticket-test_1  | > request count                                       3000 (OK=2799   KO=201   )
+ticket-test_1  | > min response time                                      0 (OK=10     KO=0     )
+ticket-test_1  | > max response time                                  15782 (OK=15782  KO=0     )
+ticket-test_1  | > mean response time                                  6902 (OK=7397   KO=0     )
+ticket-test_1  | > std deviation                                       4439 (OK=4177   KO=0     )
+ticket-test_1  | > response time 50th percentile                       6149 (OK=6859   KO=0     )
+ticket-test_1  | > response time 75th percentile                      10134 (OK=10312  KO=0     )
+ticket-test_1  | > response time 95th percentile                      14259 (OK=14283  KO=0     )
+ticket-test_1  | > response time 99th percentile                      14806 (OK=14820  KO=0     )
+ticket-test_1  | > mean requests/sec                                157.895 (OK=147.316 KO=10.579)
+ticket-test_1  | ---- Response Time Distribution ------------------------------------------------
+ticket-test_1  | > t < 800 ms                                           171 (  6%)
+ticket-test_1  | > 800 ms < t < 1200 ms                                  52 (  2%)
+ticket-test_1  | > t > 1200 ms                                         2576 ( 86%)
+ticket-test_1  | > failed                                               201 (  7%)
+ticket-test_1  | ---- Errors --------------------------------------------------------------------
+ticket-test_1  | > j.n.ConnectException: connection timed out: ticketreservation/    201 (100.0%)
+
+aplicacao completa - spring boot 1.5.8.RELEASE
+ticket-test_1  | ---- Global Information --------------------------------------------------------
+ticket-test_1  | > request count                                       3000 (OK=3000   KO=0     )
+ticket-test_1  | > min response time                                     21 (OK=21     KO=-     )
+ticket-test_1  | > max response time                                  18291 (OK=18291  KO=-     )
+ticket-test_1  | > mean response time                                 10081 (OK=10081  KO=-     )
+ticket-test_1  | > std deviation                                       4292 (OK=4292   KO=-     )
+ticket-test_1  | > response time 50th percentile                       9455 (OK=9455   KO=-     )
+ticket-test_1  | > response time 75th percentile                      13985 (OK=13985  KO=-     )
+ticket-test_1  | > response time 95th percentile                      16263 (OK=16262  KO=-     )
+ticket-test_1  | > response time 99th percentile                      17702 (OK=17702  KO=-     )
+ticket-test_1  | > mean requests/sec                                136.364 (OK=136.364 KO=-     )
+ticket-test_1  | ---- Response Time Distribution ------------------------------------------------
+ticket-test_1  | > t < 800 ms                                            75 (  3%)
+ticket-test_1  | > 800 ms < t < 1200 ms                                  25 (  1%)
+ticket-test_1  | > t > 1200 ms                                         2900 ( 97%)
+ticket-test_1  | > failed                                                 0 (  0%)
+
+aplicacao completa - spring boot 2.0.0.M6

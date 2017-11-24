@@ -1,6 +1,5 @@
 #!/usr/bin/env sh
 
 cd ticket-reservation
-gradle clean
-gradle buildDocker # -x test
+./gradlew clean buildDocker # -x test
 cd ..
