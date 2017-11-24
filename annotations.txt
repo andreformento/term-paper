@@ -55,3 +55,42 @@ ticket-test_1  | > t > 1200 ms                                         2900 ( 97
 ticket-test_1  | > failed                                                 0 (  0%)
 
 aplicacao completa - spring boot 2.0.0.M6
+heavisideUsers(3000) over(5 /*seconds*/)
+ticket-test_1  | > request count                                       3000 (OK=3000   KO=0     )
+ticket-test_1  | > min response time                                     23 (OK=23     KO=-     )
+ticket-test_1  | > max response time                                  20121 (OK=20121  KO=-     )
+ticket-test_1  | > mean response time                                 10294 (OK=10294  KO=-     )
+ticket-test_1  | > std deviation                                       4739 (OK=4739   KO=-     )
+ticket-test_1  | > response time 50th percentile                      10454 (OK=10454  KO=-     )
+ticket-test_1  | > response time 75th percentile                      13676 (OK=13676  KO=-     )
+ticket-test_1  | > response time 95th percentile                      18174 (OK=18174  KO=-     )
+ticket-test_1  | > response time 99th percentile                      18837 (OK=18837  KO=-     )
+ticket-test_1  | > mean requests/sec                                111.111 (OK=111.111 KO=-     )
+ticket-test_1  | ---- Response Time Distribution ------------------------------------------------
+ticket-test_1  | > t < 800 ms                                            57 (  2%)
+ticket-test_1  | > 800 ms < t < 1200 ms                                  14 (  0%)
+ticket-test_1  | > t > 1200 ms                                         2929 ( 98%)
+ticket-test_1  | > failed                                                 0 (  0%)
+
+aplicacao completa - spring boot 2.0.0.M6
+constantUsersPerSec(3000) during(5 /*seconds*/)
+ticket-test_1  | > request count                                      15000 (OK=9497   KO=5503  )
+ticket-test_1  | > min response time                                      0 (OK=290    KO=0     )
+ticket-test_1  | > max response time                                  60011 (OK=60011  KO=59988 )
+ticket-test_1  | > mean response time                                 17521 (OK=27654  KO=33    )
+ticket-test_1  | > std deviation                                      16270 (OK=11708  KO=1400  )
+ticket-test_1  | > response time 50th percentile                      20525 (OK=28405  KO=0     )
+ticket-test_1  | > response time 75th percentile                      30456 (OK=33472  KO=0     )
+ticket-test_1  | > response time 95th percentile                      47054 (OK=50576  KO=0     )
+ticket-test_1  | > response time 99th percentile                      54000 (OK=54509  KO=0     )
+ticket-test_1  | > mean requests/sec                                227.273 (OK=143.894 KO=83.379)
+ticket-test_1  | ---- Response Time Distribution ------------------------------------------------
+ticket-test_1  | > t < 800 ms                                            20 (  0%)
+ticket-test_1  | > 800 ms < t < 1200 ms                                  42 (  0%)
+ticket-test_1  | > t > 1200 ms                                         9435 ( 63%)
+ticket-test_1  | > failed                                              5503 ( 37%)
+ticket-test_1  | ---- Errors --------------------------------------------------------------------
+ticket-test_1  | > j.n.ConnectException: connection timed out: ticketreservation/   5344 (97.11%)
+ticket-test_1  | 172.19.0.3:8080
+ticket-test_1  | > j.u.c.TimeoutException: Request timeout to ticketreservation/1    159 ( 2.89%)
+ticket-test_1  | 72.19.0.3:8080 after 60000 ms

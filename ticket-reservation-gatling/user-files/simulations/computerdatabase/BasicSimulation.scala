@@ -6,6 +6,7 @@ import io.gatling.http.request.builder.HttpRequestBuilder
 
 // https://gatling.io/docs/current/quickstart/
 // https://gatling.io/docs/2.3/http/http_request/
+// https://gatling.io/docs/2.3/general/simulation_setup
 // https://hub.docker.com/r/denvazh/gatling/
 
 class BasicSimulation extends Simulation { // 3
@@ -35,7 +36,10 @@ class BasicSimulation extends Simulation { // 3
     .pause(0) // 10
 
   setUp(
-    scn.inject(heavisideUsers(3000) over(5 /*seconds*/))
+    scn.inject(
+        constantUsersPerSec(3000) during(5 /*seconds*/)
+        // heavisideUsers(3000) over(5 /*seconds*/)
+      )
   ).protocols(httpConf) // 13
 
 }
