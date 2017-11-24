@@ -27,7 +27,8 @@ docker run \
        --link=mongodb \
        --rm -d \
        -p 8080:8080 \
-       -e SPRING_DATA_MONGODB_URI='mongodb://mongodb/test' \
+       -e SPRING_REDIS_HOSTNAME='redisdb' \
+       -e SPRING_REDIS_PORT='6379' \
        --name realtimeticket-ticketreservation \
        andreformento/realtimeticket-ticketreservation
 ```
@@ -47,7 +48,8 @@ kubectl run \
         realtimeticket-ticketreservation-app \
         --port=8080 \
         --rm
-        --env="SPRING_DATA_MONGODB_URI='mongodb://mongodb/test'"
+        --env="SPRING_REDIS_HOSTNAME='redisdb'"
+        --env="SPRING_REDIS_PORT='6379'"
 ```
 
 - Expose application
@@ -64,14 +66,6 @@ kubectl expose deployment realtimeticket-ticketreservation-app \
 - Stop `minikube stop`
 
 ### Use application
-
-- Booking an eventReservation
-
-```bash
-curl -X POST 'http://localhost:8080/events/uuid456/tickets' \
-     -H 'Content-Type: application/json' \
-     -d '{"idUser": "uuid123"}'
-```
 
 - Performance test
 ```bash
