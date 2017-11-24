@@ -5,7 +5,7 @@ import com.formento.realtimeticket.ticketreservation.reservation.TicketReservati
 public class TicketReservationFullException extends RuntimeException {
 
     public TicketReservationFullException(final TicketReservation ticketReservation) {
-        super("Event " + ticketReservation.getIdEvent() + " is full");
+        super("EventReservation " + ticketReservation.getIdEvent() + " is full");
     }
 
 }

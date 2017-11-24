@@ -65,7 +65,7 @@ kubectl expose deployment realtimeticket-ticketreservation-app \
 
 ### Use application
 
-- Booking an event
+- Booking an eventReservation
 
 ```bash
 curl -X POST 'http://localhost:8080/events/uuid456/tickets' \

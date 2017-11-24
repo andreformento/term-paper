@@ -1,5 +1,7 @@
 package com.formento.realtimeticket.ticketreservation.reservation;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 import javax.validation.constraints.NotNull;
 
@@ -12,27 +14,20 @@ public class TicketReservation {
     private final String idUser;
 
     @NotNull
-    private final Long count;
+    private final Collection<String> reservationIds;
 
-    @NotNull
-    private final Status status;
-
-    enum Status {
-        PRE_RESERVE, RESERVED, FULL
-    }
-
-    public TicketReservation(String idEvent, String idUser, Long count) {
+    private TicketReservation(String idEvent, String idUser, Collection<String> reservationIds) {
         this.idEvent = idEvent;
         this.idUser = idUser;
-        this.count = count;
-        this.status = Status.PRE_RESERVE;
+        this.reservationIds = reservationIds;
     }
 
-    public TicketReservation(TicketReservation ticketReservation, Status status) {
-        this.idEvent = ticketReservation.idEvent;
-        this.idUser = ticketReservation.idUser;
-        this.count = ticketReservation.count;
-        this.status = status;
+    public TicketReservation(String idEvent, String idUser) {
+        this(idEvent, idUser, Collections.emptyList());
+    }
+
+    public TicketReservation(TicketReservation ticketReservation, Collection<String> reservationIds) {
+        this(ticketReservation.idEvent, ticketReservation.idUser, reservationIds);
     }
 
     public String getIdEvent() {
@@ -43,12 +38,12 @@ public class TicketReservation {
         return idUser;
     }
 
-    public Long getCount() {
-        return count;
+    public Collection<String> getReservationIds() {
+        return reservationIds;
     }
 
-    public Status getStatus() {
-        return status;
+    public Integer getCount() {
+        return getReservationIds().size();
     }
 
     @Override

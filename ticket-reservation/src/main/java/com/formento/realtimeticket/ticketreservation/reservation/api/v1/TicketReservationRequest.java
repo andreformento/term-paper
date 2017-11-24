@@ -12,10 +12,10 @@ class TicketReservationRequest implements Serializable {
     @NotNull
     private final String idUser;
     @NotNull
-    private final Long count;
+    private final Integer count;
 
     @ConstructorProperties({"idUser", "count"})
-    TicketReservationRequest(String idUser, Long count) {
+    TicketReservationRequest(String idUser, Integer count) {
         this.idUser = idUser;
         this.count = count;
     }
@@ -24,8 +24,12 @@ class TicketReservationRequest implements Serializable {
         return idUser;
     }
 
+    public Integer getCount() {
+        return count;
+    }
+
     TicketReservation toModel(final String idEvent) {
-        return new TicketReservation(idEvent, idUser, count);
+        return new TicketReservation(idEvent, idUser);
     }
 
 }

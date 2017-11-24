@@ -28,7 +28,7 @@ public class TicketReservationController {
         @RequestBody final TicketReservationRequest ticketReservationRequest
     ) {
 
-        return mapper.mapToResponse(service.booking(mapper.mapFromRequest(idEvent, ticketReservationRequest)));
+        return mapper.mapToResponse(service.booking(mapper.mapFromRequest(idEvent, ticketReservationRequest), ticketReservationRequest.getCount()));
     }
 
 }

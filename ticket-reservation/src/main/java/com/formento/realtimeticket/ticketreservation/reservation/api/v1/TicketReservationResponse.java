@@ -14,10 +14,13 @@ class TicketReservationResponse implements Serializable {
     @NotNull
     private final String idUser;
 
+    @NotNull
+    private final Integer count;
 
     TicketReservationResponse(final TicketReservation ticketReservation) {
         this.idEvent = ticketReservation.getIdEvent();
         this.idUser = ticketReservation.getIdUser();
+        this.count = ticketReservation.getCount();
     }
 
     public String getIdEvent() {
@@ -26,5 +29,9 @@ class TicketReservationResponse implements Serializable {
 
     public String getIdUser() {
         return idUser;
+    }
+
+    public Integer getCount() {
+        return count;
     }
 }

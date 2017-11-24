@@ -1,9 +1,8 @@
 package com.formento.realtimeticket.ticketreservation.reservation;
 
-import com.formento.realtimeticket.ticketreservation.event.Event;
-import com.formento.realtimeticket.ticketreservation.event.EventService;
+import com.formento.realtimeticket.ticketreservation.event.EventReservationService;
 import com.formento.realtimeticket.ticketreservation.exception.TicketReservationFullException;
-import com.formento.realtimeticket.ticketreservation.reservation.TicketReservation.Status;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,28 +10,29 @@ import org.springframework.stereotype.Service;
 public class TicketReservationService {
 
     private final TicketReservationRepository ticketReservationRepository;
-    private final EventService eventService;
+    private final EventReservationService eventReservationService;
 
     @Autowired
     public TicketReservationService(TicketReservationRepository ticketReservationRepository,
-        EventService eventService) {
+        EventReservationService eventReservationService) {
         this.ticketReservationRepository = ticketReservationRepository;
-        this.eventService = eventService;
+        this.eventReservationService = eventReservationService;
     }
 
-    public TicketReservation booking(final TicketReservation ticketReservation) {
-        // validate if available
+    public TicketReservation booking(final TicketReservation ticketReservation, final Integer count) {
+        final String eventId = ticketReservation.getIdEvent();
+        final Set<String> reservationIds = eventReservationService.getReservationIdsFrom(eventId, count);
 
-        final Event event = eventService.getById(ticketReservation.getIdEvent());
-        final Long count = ticketReservationRepository.increment(ticketReservation.getCount());
-
-        if (event.isValidSequence(count)) {
-            return new TicketReservation(ticketReservation, Status.RESERVED);
-        } else {
-            ticketReservationRepository.decrement(ticketReservation.getCount());
-
-            throw new TicketReservationFullException(new TicketReservation(ticketReservation, Status.FULL));
+        if (reservationIds.isEmpty()) {
+            throw new TicketReservationFullException(ticketReservation);
         }
+
+        final TicketReservation result = new TicketReservation(ticketReservation, reservationIds);
+        ticketReservationRepository.saveReservation(result);
+
+        // colocar na fila para adicionar novamente
+
+        return result;
     }
 
 }
