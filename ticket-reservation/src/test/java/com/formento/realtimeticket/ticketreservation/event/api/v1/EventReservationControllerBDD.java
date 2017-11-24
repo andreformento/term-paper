@@ -17,7 +17,7 @@ public class EventReservationControllerBDD {
     }
 
     public void createEvent() {
-        final String json = "{\"eventId\": \"" + EVENT_ID + "\", \"limit\": 3}";
+        final String json = "{\"eventId\": \"" + EVENT_ID + "\", \"limit\": 30}";
 
         given.
             body(json).
@@ -26,7 +26,10 @@ public class EventReservationControllerBDD {
             then().
             statusCode(is(HttpStatus.CREATED.value())).
             content("eventId", equalTo(EVENT_ID)).
-            content("limit", equalTo(3));
+            content("limit", equalTo(30));
     }
 
+    public String getEventId() {
+        return EVENT_ID;
+    }
 }

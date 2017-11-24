@@ -8,7 +8,6 @@ import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,33 +25,46 @@ import org.springframework.web.context.WebApplicationContext;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class TicketReservationControllerTest {
 
-    private static final String KEY_EVENT = "e-uuidEvent";
-
     @Autowired
     private WebApplicationContext context;
     private MockMvcRequestSpecification given;
+    private TicketReservationBDD ticketReservationBDD;
 
     @Before
     public void init() {
         final MockMvc mvc = webAppContextSetup(context).build();
         given = RestAssuredMockMvc.given().mockMvc(mvc).contentType(MediaType.APPLICATION_JSON_VALUE).accept(ContentType.JSON);
+        ticketReservationBDD = new TicketReservationBDD(given);
     }
-    
+
     @Test
-    @Ignore
-    public void shouldBooking() {
-
-        final String json = "{\"idUser\": \"uuid123\", \"count\": 3}";
-        final String idEvent = "uuid456";
-
-        given.
-            body(json).
-            when().
-            post("/events/" + idEvent + "/tickets").
+    public void shouldBooking3() {
+        ticketReservationBDD.
+            withEvent().
+            whenCount(3).
             then().
-            statusCode(is(HttpStatus.CREATED.value())).
-            content("idEvent", equalTo(idEvent)).
-            content("idUser", equalTo("uuid123"));
+            resultOk().
+            content("count", equalTo(3));
+    }
+
+    @Test
+    public void shouldBooking30() {
+        ticketReservationBDD.
+            withEvent().
+            whenCount(30).
+            then().
+            resultOk().
+            content("count", equalTo(30));
+    }
+
+    @Test
+    public void shouldBookingMax() {
+        ticketReservationBDD.
+            withEvent().
+            whenCount(999).
+            then().
+            resultOk().
+            content("count", equalTo(30));
     }
 
 }

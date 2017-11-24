@@ -21,6 +21,9 @@ public class TicketReservationService {
 
     public TicketReservation booking(final TicketReservation ticketReservation, final Integer count) {
         final String eventId = ticketReservation.getIdEvent();
+
+        eventReservationService.getById(eventId);
+
         final Set<String> reservationIds = eventReservationService.getReservationIdsFrom(eventId, count);
 
         if (reservationIds.isEmpty()) {

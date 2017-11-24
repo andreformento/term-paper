@@ -22,8 +22,6 @@ import org.springframework.web.context.WebApplicationContext;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class EventReservationControllerTest {
 
-    private static final String EVENT_ID = "23d21a68-db74-4fad-a22c-8fe3c103ba8a";
-
     @Autowired
     private WebApplicationContext context;
     private EventReservationControllerBDD eventBDD;
