@@ -11,6 +11,7 @@ while getopts "h:n" opt; do
             ;;
         n)
             startApplication="echo 'no start application - remote'"
+            ./clean.sh
             ;;
         \?)
             echo "Invalid option: -$OPTARG" >&2
