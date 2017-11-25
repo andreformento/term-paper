@@ -36,14 +36,14 @@ fi
 
 $startApplication
 
-printf 'Waiting for application is ready'
+printf "Waiting for application is ready at $host"
 until $(curl --output /dev/null --silent --head --fail $host/application); do
     printf '.'
     sleep 0.1
 done
 
-echo "Using host $host"
-curl -v -w '\n%{time_total}\n' -X POST '$host/event-reservations' -H 'Content-Type: application/json' -d '{"eventId": "uuid456", "limit": 90005}'
+printf '\n'
+curl -v -w '\n%{time_total}\n' -X POST "$host/event-reservations" -H 'Content-Type: application/json' -d '{"eventId": "uuid456", "limit": 90005}'
 printf '\n'
 
 export JAVA_OPTS_TEST="-Dhostname_test=$host"
