@@ -32,12 +32,9 @@ class EventReservationRepository {
     }
 
     public Mono<Boolean> save(final EventReservation eventReservation) {
-        final Mono<Boolean> events = reactiveRedisTemplate.
+        return reactiveRedisTemplate.
             opsForHash().
             put("events", eventReservation.getEventId(), eventReservation.getLimit().toString());
-        final Boolean block = events.block(Duration.ofSeconds(1));
-        System.out.println(block);
-        return events;
     }
 
     public Mono<EventReservation> getById(final String eventId) {
