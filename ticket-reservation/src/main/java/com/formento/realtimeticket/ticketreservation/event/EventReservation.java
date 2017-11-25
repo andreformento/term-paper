@@ -5,18 +5,13 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-import javax.validation.constraints.NotNull;
-import org.springframework.data.annotation.Transient;
 
 public class EventReservation {
 
-    @NotNull
     private final String eventId;
 
-    @NotNull
     private final Long limit;
 
-    @Transient
     private transient Set<String> sequence;
 
     public EventReservation(String eventId, Long limit) {

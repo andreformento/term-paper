@@ -3,17 +3,13 @@ package com.formento.realtimeticket.ticketreservation.reservation;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
-import javax.validation.constraints.NotNull;
 
 public class TicketReservation {
 
-    @NotNull
     private final String idEvent;
 
-    @NotNull
     private final String idUser;
 
-    @NotNull
     private final Collection<String> reservationIds;
 
     private TicketReservation(String idEvent, String idUser, Collection<String> reservationIds) {
