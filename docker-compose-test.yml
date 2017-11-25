@@ -7,6 +7,8 @@ services:
       - ticketreservation
     networks:
       - ticket-net
+    environment:
+      - JAVA_OPTS=${JAVA_OPTS_TEST}
     volumes:
       - ./ticket-reservation-gatling/conf:/opt/gatling/conf
       - ./ticket-reservation-gatling/user-files:/opt/gatling/user-files

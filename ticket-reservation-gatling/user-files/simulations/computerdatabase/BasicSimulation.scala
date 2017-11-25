@@ -11,21 +11,14 @@ import io.gatling.http.request.builder.HttpRequestBuilder
 
 class BasicSimulation extends Simulation { // 3
 
+  val hostname = System.getProperty("hostname_test")
   val httpConf = http // 4
-    .baseURL("http://ticketreservation:8080") // 5
+    .baseURL(hostname) // 5
     .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8") // 6
     .doNotTrackHeader("1")
     .acceptLanguageHeader("en-US,en;q=0.5")
     .acceptEncodingHeader("gzip, deflate")
     .userAgentHeader("Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0")
-
-  val scnBefore = scenario("BasicSimulation1") // 7
-    .exec(http("create_event_reservation")  // 8
-         .post("http://ticketreservation:8080/event-reservations")
-         .body(StringBody("""{"eventId": "uuid456", "limit": 2147483646}"""))
-         .asJSON
-      )
-    .pause(5) // 10
 
   val scn = scenario("BasicSimulation") // 7
     .exec(http("request_1")  // 8
@@ -34,6 +27,12 @@ class BasicSimulation extends Simulation { // 3
          .asJSON
       )
     .pause(0) // 10
+
+    before {
+      printf("\n############ HOSTNAME: ")
+      printf(hostname)
+      printf("\n\n\n\n")
+    }
 
   setUp(
     scn.inject(
