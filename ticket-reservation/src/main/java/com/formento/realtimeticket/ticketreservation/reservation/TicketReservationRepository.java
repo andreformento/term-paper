@@ -1,27 +1,25 @@
 package com.formento.realtimeticket.ticketreservation.reservation;
 
-import com.formento.realtimeticket.ticketreservation.repository.RedisTemplateFactory;
-import java.util.concurrent.TimeUnit;
-import org.springframework.data.redis.core.RedisTemplate;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 class TicketReservationRepository {
 
     private static final int TIMEOUT_OF_RESERVATION = 20;
-    private static final TimeUnit UNIT_OF_TIMEOUT_OF_RESERVATION = TimeUnit.MINUTES;
+    private static final ChronoUnit UNIT_OF_TIMEOUT_OF_RESERVATION = ChronoUnit.MINUTES;
 
-    private final RedisTemplate<String, String> redisTemplateString;
+    private final ReactiveRedisTemplate<String, String> reactiveRedisTemplate;
 
-    public TicketReservationRepository(RedisTemplateFactory redisTemplateFactory) {
-        this.redisTemplateString = redisTemplateFactory.make(String.class);
+    public TicketReservationRepository(ReactiveRedisTemplate<String, String> reactiveRedisTemplate) {
+        this.reactiveRedisTemplate = reactiveRedisTemplate;
     }
 
-    public void saveReservation(final TicketReservation ticketReservation) {
-        ticketReservation.getReservationIds().forEach(ticketId -> {
-            redisTemplateString.opsForValue().set(ticketId, ticketReservation.getIdUser());
-            redisTemplateString.expire(ticketId, TIMEOUT_OF_RESERVATION, UNIT_OF_TIMEOUT_OF_RESERVATION);
-        });
+    public void saveReservation(final String ticketId, final String idUser) {
+        reactiveRedisTemplate.opsForValue().set(ticketId, idUser);
+        reactiveRedisTemplate.expire(ticketId, Duration.of(TIMEOUT_OF_RESERVATION, UNIT_OF_TIMEOUT_OF_RESERVATION));
     }
 
 }

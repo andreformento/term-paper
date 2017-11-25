@@ -2,9 +2,11 @@ package com.formento.realtimeticket.ticketreservation.reservation;
 
 import com.formento.realtimeticket.ticketreservation.event.EventReservationService;
 import com.formento.realtimeticket.ticketreservation.exception.TicketReservationFullException;
-import java.util.Set;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
 public class TicketReservationService {
@@ -19,23 +21,25 @@ public class TicketReservationService {
         this.eventReservationService = eventReservationService;
     }
 
-    public TicketReservation booking(final TicketReservation ticketReservation, final Integer count) {
-        final String eventId = ticketReservation.getIdEvent();
+    public Mono<TicketReservation> booking(final TicketReservation ticketReservationFromRequest, final Integer count) {
+        final String idEvent = ticketReservationFromRequest.getIdEvent();
 
-        eventReservationService.getById(eventId);
-
-        final Set<String> reservationIds = eventReservationService.getReservationIdsFrom(eventId, count);
-
-        if (reservationIds.isEmpty()) {
-            throw new TicketReservationFullException(ticketReservation);
-        }
-
-        final TicketReservation result = new TicketReservation(ticketReservation, reservationIds);
-        ticketReservationRepository.saveReservation(result);
-
-        // colocar na fila para adicionar novamente
-
-        return result;
+        return eventReservationService.
+            getById(idEvent).
+            map(eventReservation -> eventReservationService.
+                getReservationIdsFrom(eventReservation.getEventId(), count).
+                map(ticketId -> {
+                    ticketReservationRepository.saveReservation(ticketId, idEvent);
+                    return ticketId;
+                }).
+                switchIfEmpty(Mono.error(new TicketReservationFullException(ticketReservationFromRequest)))
+            ).
+            map(reservationIds -> reservationIds.
+                reduce(ImmutableSet.<String>builder(), Builder::add).map(Builder::build)
+            ).
+            flatMap(reservationIds -> reservationIds.
+                map(list -> new TicketReservation(ticketReservationFromRequest, list))
+            );
     }
 
 }

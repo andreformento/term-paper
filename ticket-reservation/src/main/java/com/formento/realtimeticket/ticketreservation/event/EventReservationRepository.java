@@ -1,62 +1,59 @@
 package com.formento.realtimeticket.ticketreservation.event;
 
 import com.formento.realtimeticket.ticketreservation.exception.RepositoryNotFoundException;
-import com.formento.realtimeticket.ticketreservation.repository.RedisTemplateFactory;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet.Builder;
+import java.time.Duration;
+import java.util.Objects;
 import java.util.Set;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Repository
 class EventReservationRepository {
 
-    private final RedisTemplate<String, String> redisTemplateString;
-    private final RedisTemplate<String, Long> redisTemplateLong;
+    private final ReactiveRedisTemplate<String, String> reactiveRedisTemplate;
 
-    public EventReservationRepository(RedisTemplateFactory redisTemplateFactory) {
-        this.redisTemplateString = redisTemplateFactory.make(String.class);
-        this.redisTemplateLong = redisTemplateFactory.make(Long.class);
+    EventReservationRepository(ReactiveRedisTemplate<String, String> reactiveRedisTemplate) {
+        this.reactiveRedisTemplate = reactiveRedisTemplate;
     }
 
-    public void deleteReservations(final String eventId) {
-        redisTemplateString.opsForSet().getOperations().delete(eventId);
+    public Mono<Boolean> deleteReservations(final String eventId) {
+        return reactiveRedisTemplate.opsForSet().delete(eventId);
     }
 
-    public Long createReservations(final EventReservation eventReservation) {
+    public Mono<Long> createReservations(final EventReservation eventReservation) {
         final String eventId = eventReservation.getEventId();
 
         final Set<String> sequence = eventReservation.getSequence();
         final String[] array = sequence.toArray(new String[sequence.size()]);
 
-        redisTemplateString.opsForSet().add(eventId, array);
-        return redisTemplateString.opsForSet().size(eventId);
+        return reactiveRedisTemplate.opsForSet().add(eventId, array);
     }
 
-    public EventReservation save(final EventReservation eventReservation) {
-        redisTemplateLong.opsForHash().put("events", eventReservation.getEventId(), eventReservation.getLimit());
-        return eventReservation;
+    public Mono<Boolean> save(final EventReservation eventReservation) {
+        final Mono<Boolean> events = reactiveRedisTemplate.
+            opsForHash().
+            put("events", eventReservation.getEventId(), eventReservation.getLimit().toString());
+        final Boolean block = events.block(Duration.ofSeconds(1));
+        System.out.println(block);
+        return events;
     }
 
-    public EventReservation getById(final String eventId) {
-        final Long limit = (Long) redisTemplateLong.opsForHash().get("events", eventId);
-        if (limit == null) {
-            throw new RepositoryNotFoundException(eventId);
-        }
-        return new EventReservation(eventId, limit);
+    public Mono<EventReservation> getById(final String eventId) {
+        return reactiveRedisTemplate.
+            opsForHash().
+            get("events", eventId).
+            filter(Objects::nonNull).
+            map(limit -> Long.valueOf((String) limit)).
+            map(limit -> new EventReservation(eventId, limit)).
+            switchIfEmpty(Mono.error(new RepositoryNotFoundException(eventId)));
     }
 
-    public Set<String> getReservation(String eventId, Integer count) {
-        final Builder<String> ticketIds = ImmutableSet.builder();
-        for (int i = 0; i < count; i++) {
-            final String ticketId = redisTemplateString.opsForSet().pop(eventId);
-            if (ticketId == null) {
-                break;
-            }
-            ticketIds.add(ticketId);
-        }
-
-        return ticketIds.build();
+    public Flux<String> getReservation(String eventId, Integer count) {
+        return reactiveRedisTemplate.
+            opsForSet().
+            pop(eventId, count);
     }
 
 }

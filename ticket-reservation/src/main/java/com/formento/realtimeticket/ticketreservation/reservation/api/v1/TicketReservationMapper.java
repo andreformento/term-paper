@@ -8,14 +8,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @Component
 class TicketReservationMapper {
 
-    HttpEntity<Resource<TicketReservationResponse>> mapToResponse(final TicketReservation ticketReservation) {
-        return new ResponseEntity<>(
-            new Resource<>(new TicketReservationResponse(ticketReservation), linkTo(TicketReservationController.class).withSelfRel()),
-            HttpStatus.CREATED);
+    Mono<TicketReservationResponse> mapToResponse(final Mono<TicketReservation> ticketReservation) {
+        return ticketReservation.map(TicketReservationResponse::new);
     }
 
     TicketReservation mapFromRequest(final String idEvent, final TicketReservationRequest ticketReservationRequest) {

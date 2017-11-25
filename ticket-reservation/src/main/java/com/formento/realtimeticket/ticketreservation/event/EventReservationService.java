@@ -1,7 +1,8 @@
 package com.formento.realtimeticket.ticketreservation.event;
 
-import java.util.Set;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class EventReservationService {
@@ -12,19 +13,21 @@ public class EventReservationService {
         this.repository = repository;
     }
 
-    public EventReservation createEvent(final EventReservation eventReservation) {
-        repository.deleteReservations(eventReservation.getEventId());
-        repository.save(eventReservation);
-        repository.createReservations(eventReservation);
-
-        return getById(eventReservation.getEventId());
+    public Mono<EventReservation> createEvent(final EventReservation eventReservation) {
+        return repository.
+            deleteReservations(eventReservation.getEventId()).
+            flatMap(f -> repository.save(eventReservation)).
+            filter(v -> v).
+            flatMap(f -> repository.createReservations(eventReservation)).
+            filter(v -> v > 0L).
+            flatMap(v -> getById(eventReservation.getEventId()));
     }
 
-    public EventReservation getById(final String eventId) {
+    public Mono<EventReservation> getById(final String eventId) {
         return repository.getById(eventId);
     }
 
-    public Set<String> getReservationIdsFrom(String eventId, Integer count) {
+    public Flux<String> getReservationIdsFrom(String eventId, Integer count) {
         return repository.getReservation(eventId, count);
     }
 
