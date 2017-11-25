@@ -28,9 +28,7 @@ while getopts "h:n" opt; do
         esac
     done
 
-if [ -n "$host" ]; then
-    echo "Using host $host"
-else
+if [ -z "$host" ]; then
     echo "Please inform the host:"
     echo "$0 -h http://myip:8080"
     exit 1
@@ -44,7 +42,7 @@ until $(curl --output /dev/null --silent --head --fail $host/application); do
     sleep 0.1
 done
 
-printf '\n'
+echo "Using host $host"
 curl -v -w '\n%{time_total}\n' -X POST '$host/event-reservations' -H 'Content-Type: application/json' -d '{"eventId": "uuid456", "limit": 90005}'
 printf '\n'
 
