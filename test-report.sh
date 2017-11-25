@@ -1,16 +1,29 @@
 #!/usr/bin/env sh
 
-while getopts ":h:p:" opt; do
-  case $opt in
-    h) host="$OPTARG"
-    ;;
-    p) p_out="$OPTARG"
-    ;;
-    \?) echo "Invalid option -$OPTARG" >&2
-    ;;
-  esac
-done
+startApplication="./start.sh"
 
+# http://wiki.bash-hackers.org/howto/getopts_tutorial
+# https://unix.stackexchange.com/questions/129391/passing-named-arguments-to-shell-scripts
+while getopts "h:n" opt; do
+    case $opt in
+        h)
+            host="$OPTARG"
+            ;;
+        n)
+            startApplication="echo 'no start application - remote'"
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            Usage
+            exit 1
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument." >&2
+            Usage
+            exit 1
+            ;;
+        esac
+    done
 
 if [[ -z "$host" ]]; then
     echo "Please inform the host:"
@@ -19,8 +32,9 @@ if [[ -z "$host" ]]; then
 else
     echo "Using host $host"
 fi
+exit 2
 
-./start.sh
+$startApplication
 
 printf 'Waiting for application is ready'
 until $(curl --output /dev/null --silent --head --fail $host:8080/application); do
