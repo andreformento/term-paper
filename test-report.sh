@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
 startApplication="./start.sh"
+finishApplication="./clean.sh"
 
 # http://wiki.bash-hackers.org/howto/getopts_tutorial
 # https://unix.stackexchange.com/questions/129391/passing-named-arguments-to-shell-scripts
@@ -11,7 +12,8 @@ while getopts "h:n" opt; do
             ;;
         n)
             startApplication="echo 'no start application - remote'"
-            docker-compose --file docker-compose-test.yml down
+            finishApplication="docker-compose --file docker-compose-test.yml down"
+            $finishApplication
             ;;
         \?)
             echo "Invalid option: -$OPTARG" >&2
@@ -49,4 +51,4 @@ printf '\n'
 export JAVA_OPTS_TEST="-Dhostname_test=$host"
 docker-compose --file docker-compose-test.yml up
 
-./clean.sh
+$finishApplication
