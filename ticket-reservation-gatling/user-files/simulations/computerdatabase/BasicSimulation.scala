@@ -36,7 +36,7 @@ class BasicSimulation extends Simulation { // 3
 
   setUp(
     scn.inject(
-        constantUsersPerSec(2000) during(5 /*seconds*/)
+        constantUsersPerSec(3000) during(5 /*seconds*/)
         // heavisideUsers(3000) over(5 /*seconds*/)
       )
   ).protocols(httpConf) // 13
