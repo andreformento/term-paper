@@ -17,6 +17,8 @@ public class EmbededRedisTestConfiguration {
 
     @PostConstruct
     public void startRedis() {
+        // ps -ef | grep -i 'redis-server'
+        // kill -9 PID owned by redis
         this.redisServer.start();
     }
 
