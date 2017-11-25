@@ -1,9 +1,6 @@
 #!/usr/bin/env sh
 
-./clean.sh
-#./build.sh
-
-docker-compose up -d
+./start.sh
 
 printf 'Waiting for application is ready'
 until $(curl --output /dev/null --silent --head --fail http://localhost:8080/application); do
