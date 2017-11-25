@@ -11,7 +11,7 @@ while getopts "h:n" opt; do
             ;;
         n)
             startApplication="echo 'no start application - remote'"
-            ./clean.sh
+            docker-compose --file docker-compose-test.yml down
             ;;
         \?)
             echo "Invalid option: -$OPTARG" >&2
