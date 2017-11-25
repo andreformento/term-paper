@@ -25,14 +25,13 @@ while getopts "h:n" opt; do
         esac
     done
 
-if [[ -z "$host" ]]; then
+if [ -n "$host" ]; then
+    echo "Using host $host"
+else
     echo "Please inform the host:"
     echo "$0 -h http://myip:8080"
     exit 1
-else
-    echo "Using host $host"
 fi
-exit 2
 
 $startApplication
 
