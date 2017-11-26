@@ -16,7 +16,7 @@ public class EventReservationControllerBDD {
         this.given = given;
     }
 
-    public void createEvent() {
+    public EventReservationControllerBDD createEvent() {
         final String json = "{\"eventId\": \"" + EVENT_ID + "\", \"limit\": 30}";
 
         given.
@@ -27,6 +27,18 @@ public class EventReservationControllerBDD {
             statusCode(is(HttpStatus.CREATED.value())).
             content("eventId", equalTo(EVENT_ID)).
             content("limit", equalTo(30));
+
+        return this;
+    }
+
+    public void count(final Integer availableTickets) {
+        given.
+            when().
+            get("/event-reservations/" + EVENT_ID + "/available-tickets").
+            then().
+            statusCode(is(HttpStatus.OK.value())).
+            content("eventId", equalTo(EVENT_ID)).
+            content("availableTickets", equalTo(availableTickets));
     }
 
     public String getEventId() {

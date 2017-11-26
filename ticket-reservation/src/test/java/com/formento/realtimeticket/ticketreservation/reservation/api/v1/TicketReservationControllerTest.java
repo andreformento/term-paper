@@ -41,6 +41,7 @@ public class TicketReservationControllerTest {
             withEvent().
             whenCount(3).
             then().
+            andEventMustHave(27).
             resultOk().
             content("count", equalTo(3));
     }
@@ -51,6 +52,7 @@ public class TicketReservationControllerTest {
             withEvent().
             whenCount(30).
             then().
+            andEventMustHave(0).
             resultOk().
             content("count", equalTo(30));
     }
@@ -61,6 +63,7 @@ public class TicketReservationControllerTest {
             withEvent().
             whenCount(999).
             then().
+            andEventMustHave(0).
             resultOk().
             content("count", equalTo(30));
     }

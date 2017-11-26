@@ -49,4 +49,8 @@ printf '\n'
 export JAVA_OPTS_TEST="-Dhostname_test=$host"
 docker-compose --file docker-compose-test.yml up
 
+printf '\n available-tickets: '
+curl -X GET "$host/event-reservations/uuid456/available-tickets" -H 'Content-Type: application/json'
+printf '\n'
+
 $finishApplication

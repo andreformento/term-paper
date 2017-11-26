@@ -18,6 +18,12 @@ class EventReservationMapper {
             HttpStatus.CREATED);
     }
 
+    HttpEntity<Resource<EventAvailableTicketsResponse>> mapToAvailableTickets(final String eventId, final Long availableTickets) {
+        return new ResponseEntity<>(
+            new Resource<>(new EventAvailableTicketsResponse(eventId, availableTickets), linkTo(EventReservationController.class).withSelfRel()),
+            HttpStatus.OK);
+    }
+
     EventReservation mapFromRequest(final EventReservationRequest eventReservationRequest) {
         return eventReservationRequest.toModel();
     }

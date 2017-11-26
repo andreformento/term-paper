@@ -37,4 +37,11 @@ public class EventReservationControllerTest {
         eventBDD.createEvent();
     }
 
+    @Test
+    public void shouldCountAvailableTickets() {
+        eventBDD.
+            createEvent().
+            count(30);
+    }
+
 }

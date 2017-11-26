@@ -33,6 +33,10 @@ class EventReservationRepository {
         return redisTemplateString.opsForSet().size(eventId);
     }
 
+    public Long getAvailableTickets(final String eventId) {
+        return redisTemplateString.opsForSet().size(eventId);
+    }
+
     public EventReservation save(final EventReservation eventReservation) {
         redisTemplateLong.opsForHash().put("events", eventReservation.getEventId(), eventReservation.getLimit());
         return eventReservation;

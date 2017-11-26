@@ -28,4 +28,7 @@ public class EventReservationService {
         return repository.getReservation(eventId, count);
     }
 
+    public Long getAvailableTickets(final String eventId) {
+        return repository.getAvailableTickets(eventId);
+    }
 }
