@@ -23,7 +23,7 @@ class BasicSimulation extends Simulation { // 3
   val scn = scenario("BasicSimulation") // 7
     .exec(http("request_1")  // 8
          .post("/events/uuid456/tickets")
-         .body(StringBody("""{ "idUser": "uuid123", "count": 3}"""))
+         .body(StringBody("""{ "idUser": "uuid123", "count": 2}"""))
          .asJSON
       )
     .pause(0) // 10
@@ -36,7 +36,7 @@ class BasicSimulation extends Simulation { // 3
 
   setUp(
     scn.inject(
-        constantUsersPerSec(2000) during(1 /*seconds*/)
+        constantUsersPerSec(100000) during(1 /*seconds*/)
         // heavisideUsers(20000) over(5 /*seconds*/)
       )
   ).protocols(httpConf) // 13
