@@ -16,7 +16,7 @@ docker login
 docker push andreformento/realtimeticket-ticketreservation
 ```
 
-- (Requirement) Database `docker run --name mongodb --rm -d -p 27017:27017 mongo:3.4`
+- (Requirement) Database `docker run --name redisdb --rm -d -p 6379:6379 redis:alpine`
 
 ### Run with Docker
 
@@ -24,7 +24,7 @@ docker push andreformento/realtimeticket-ticketreservation
 
 ```bash
 docker run \
-       --link=mongodb \
+       --link=redisdb \
        --rm -d \
        -p 8080:8080 \
        -e SPRING_REDIS_HOSTNAME='redisdb' \
@@ -35,7 +35,7 @@ docker run \
 
 - Show all `docker ps -a`
 
-- Kill all `docker kill mongodb realtimeticket-ticketreservation`
+- Kill all `docker kill redisdb realtimeticket-ticketreservation`
 
 ### Run with Kubernetes
 
@@ -47,8 +47,7 @@ kubectl run \
         --image=andreformento/realtimeticket-ticketreservation \
         realtimeticket-ticketreservation-app \
         --port=8080 \
-        --rm
-        --env="SPRING_REDIS_HOSTNAME='redisdb'"
+        --env="SPRING_REDIS_HOSTNAME='redisdb'" \
         --env="SPRING_REDIS_PORT='6379'"
 ```
 
@@ -61,21 +60,9 @@ kubectl expose deployment realtimeticket-ticketreservation-app \
 
 - Show all `kubectl get po -a`
 
-- Kill all `kubectl delete deployment realtimeticket-ticketreservation-app && docker kill mongodb`
+- Kill all `kubectl delete deployment realtimeticket-ticketreservation-app && docker kill redisdb`
 
 - Stop `minikube stop`
-
-### Use application
-
-- Performance test
-```bash
-BASE_PATH=$(pwd)'/src/test/gatling'
-docker run -it --rm \
-           -v $BASE_PATH/conf:/opt/gatling/conf \
-           -v $BASE_PATH/user-files:/opt/gatling/user-files \
-           -v $BASE_PATH/results:/opt/gatling/results \
-           denvazh/gatling
-```
 
 ## References
 - https://kubernetes.io/docs/user-guide/docker-cli-to-kubectl/#docker-run
