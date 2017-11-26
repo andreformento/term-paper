@@ -27,7 +27,12 @@ docker-compose --file docker-compose-test.yml down
 
 ### Kubernetes
 
-TODO
+---- $ kubectl autoscale deployment nginx-deployment --min=10 --max=15 --cpu-percent=80
+
+- Create or update configuration `kubectl apply -f deployment.yaml`
+- Show application `kubectl get pods -l app=ticketreservation`
+- Describe deployment `kubectl describe deployment realtimeticket-deployment`
+- Kill all `kubectl delete deployment realtimeticket-deployment`
 
 ### Redis
 
