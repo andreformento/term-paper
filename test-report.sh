@@ -29,9 +29,12 @@ while getopts "h:n" opt; do
     done
 
 if [ -z "$host" ]; then
-    echo "Please inform the host:"
+    echo "You can configure host:"
     echo "$0 -h http://myip:8080"
-    exit 1
+    host="http://localhost:8080"
+    hostInsideContainer="http://ticketreservation:8080"
+else
+    hostInsideContainer=$host
 fi
 
 $startApplication
@@ -46,7 +49,7 @@ printf '\n'
 curl -v -w '\n%{time_total}\n' -X POST "$host/event-reservations" -H 'Content-Type: application/json' -d '{"eventId": "uuid456", "limit": 100005}'
 printf '\n'
 
-export JAVA_OPTS_TEST="-Dhostname_test=$host"
+export JAVA_OPTS_TEST="-Dhostname_test=$hostInsideContainer"
 docker-compose --file docker-compose-test.yml up
 
 printf '\n available-tickets: '
