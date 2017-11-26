@@ -60,6 +60,10 @@ public class TicketReservationBDD {
             return response;
         }
 
+        public Then andEventMustHave(final Integer availableTickets) {
+            eventBDD.count(availableTickets);
+            return this;
+        }
     }
 
 }

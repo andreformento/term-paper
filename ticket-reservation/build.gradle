@@ -73,6 +73,7 @@ dependencies {
     testCompile('io.rest-assured:rest-assured:3.0.3')
     testCompile('io.rest-assured:json-schema-validator:3.0.3')
     testCompile('io.rest-assured:spring-mock-mvc:3.0.3')
+    testCompile 'io.netty', name: 'netty-transport-native-epoll', version: '4.1.17.Final'
 
     testCompile('it.ozimov:embedded-redis:0.7.1')
 

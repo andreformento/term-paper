@@ -31,4 +31,7 @@ public class EventReservationService {
         return repository.getReservation(eventId, count);
     }
 
+    public Mono<Long> getAvailableTickets(final String eventId) {
+        return repository.getAvailableTickets(eventId);
+    }
 }

@@ -71,6 +71,13 @@ curl -X POST 'http://localhost:8080/event-reservations' \
      -d '{"eventId": "uuid456", "limit": 30}'
 ```
 
+- Get event available tickets
+
+```bash
+curl -X GET 'http://localhost:8080/event-reservations/uuid456/available-tickets' \
+     -H 'Content-Type: application/json'
+```
+
 - Booking an event
 
 ```bash

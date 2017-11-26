@@ -2,6 +2,7 @@ package com.formento.realtimeticket.ticketreservation.reservation.api.v1;
 
 import com.formento.realtimeticket.ticketreservation.reservation.TicketReservation;
 import java.io.Serializable;
+import java.util.Objects;
 import javax.validation.constraints.NotNull;
 
 class TicketReservationResponse implements Serializable {
@@ -33,5 +34,24 @@ class TicketReservationResponse implements Serializable {
 
     public Integer getCount() {
         return count;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof TicketReservationResponse)) {
+            return false;
+        }
+        TicketReservationResponse that = (TicketReservationResponse) o;
+        return Objects.equals(idEvent, that.idEvent) &&
+            Objects.equals(idUser, that.idUser) &&
+            Objects.equals(count, that.count);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idEvent, idUser, count);
     }
 }

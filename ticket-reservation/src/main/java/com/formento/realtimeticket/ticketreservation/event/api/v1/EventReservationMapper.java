@@ -11,6 +11,10 @@ class EventReservationMapper {
         return eventReservation.map(EventReservationResponse::new);
     }
 
+    Mono<EventAvailableTicketsResponse> mapToAvailableTickets(final String eventId, final Mono<Long> availableTickets) {
+        return availableTickets.map(at -> new EventAvailableTicketsResponse(eventId, at));
+    }
+
     EventReservation mapFromRequest(final EventReservationRequest eventReservationRequest) {
         return eventReservationRequest.toModel();
     }

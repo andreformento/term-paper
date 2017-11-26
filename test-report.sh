@@ -43,10 +43,14 @@ until $(curl --output /dev/null --silent --head --fail $host/application); do
 done
 
 printf '\n'
-curl -v -w '\n%{time_total}\n' -X POST "$host/event-reservations" -H 'Content-Type: application/json' -d '{"eventId": "uuid456", "limit": 90005}'
+curl -v -w '\n%{time_total}\n' -X POST "$host/event-reservations" -H 'Content-Type: application/json' -d '{"eventId": "uuid456", "limit": 100005}'
 printf '\n'
 
 export JAVA_OPTS_TEST="-Dhostname_test=$host"
 docker-compose --file docker-compose-test.yml up
+
+printf '\n available-tickets: '
+curl -X GET "$host/event-reservations/uuid456/available-tickets" -H 'Content-Type: application/json'
+printf '\n'
 
 $finishApplication

@@ -1,7 +1,6 @@
 package com.formento.realtimeticket.ticketreservation.event;
 
 import com.formento.realtimeticket.ticketreservation.exception.RepositoryNotFoundException;
-import java.time.Duration;
 import java.util.Objects;
 import java.util.Set;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
@@ -35,6 +34,10 @@ class EventReservationRepository {
         return reactiveRedisTemplate.
             opsForHash().
             put("events", eventReservation.getEventId(), eventReservation.getLimit().toString());
+    }
+
+    public Mono<Long> getAvailableTickets(final String eventId) {
+        return reactiveRedisTemplate.opsForSet().size(eventId);
     }
 
     public Mono<EventReservation> getById(final String eventId) {
