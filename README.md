@@ -13,17 +13,7 @@ Implementation of [term paper (just in Portuguese)](https://github.com/andreform
 
 #### Test
 
-- After your services is runnning, run this
-
-```bash
-docker-compose --file docker-compose-test.yml up
-```
-
-- And stop
-
-```bash
-docker-compose --file docker-compose-test.yml down
-```
+- Performance test: `./test-report.sh`
 
 ### Kubernetes
 
@@ -92,5 +82,3 @@ curl -X POST 'http://localhost:8080/events/uuid456/tickets' \
      -w '\ntime: %{time_total}\n' \
      -d '{"idUser": "uuid123", "count": 3}'
 ```
-
-- Performance test: `./test-report.sh`
