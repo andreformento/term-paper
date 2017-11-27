@@ -5,15 +5,9 @@ Implementation of [term paper (just in Portuguese)](https://github.com/andreform
 ## How to
 
 - Build all: `./build.sh`
-
-### Docker
-
-- Run: `docker-compose up -d`
-- Stop: `docker-compose down`
-
-#### Test
-
+- Run: `./start.sh`
 - Performance test: `./test-report.sh`
+- Clear all: `./clean.sh`
 
 ### Kubernetes
 
