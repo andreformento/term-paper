@@ -12,6 +12,7 @@ import io.gatling.http.request.builder.HttpRequestBuilder
 class BasicSimulation extends Simulation { // 3
 
   val hostname = System.getProperty("hostname_test")
+  val overTime = System.getProperty("over_time").toInt
   val requestsCount = System.getProperty("requests_count").toInt
   val httpConf = http // 4
     .baseURL(hostname) // 5
@@ -32,6 +33,7 @@ class BasicSimulation extends Simulation { // 3
     before {
       printf("\n############ HOSTNAME: " + hostname)
       printf("\n############ requestsCount: " + requestsCount.toString)
+      printf("\n############ overTime: " + overTime.toString)
       printf("\n\n\n\n")
     }
 
@@ -44,7 +46,7 @@ class BasicSimulation extends Simulation { // 3
         // constantUsersPerSec(20) during(1 /*seconds*/) randomized, // 5
         // splitUsers(1000) into(rampUsers(10) over(1 /*seconds*/)) separatedBy(1 /*seconds*/), // 8
         // splitUsers(1000) into(rampUsers(10) over(1 /*seconds*/)) separatedBy atOnceUsers(30), // 9
-        heavisideUsers(requestsCount) over(10 /*seconds*/)
+        heavisideUsers(requestsCount) over(overTime /*seconds*/)
       )
   ).protocols(httpConf) // 13
 

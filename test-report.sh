@@ -3,10 +3,11 @@
 startApplication="./start.sh"
 finishApplication="./clean.sh"
 requests_count=3000
+over_time=10 # seconds
 
 # http://wiki.bash-hackers.org/howto/getopts_tutorial
 # https://unix.stackexchange.com/questions/129391/passing-named-arguments-to-shell-scripts
-while getopts "hr:n" opt; do
+while getopts "h:r:t:n" opt; do
     case $opt in
         h)
             host="$OPTARG"
@@ -18,6 +19,9 @@ while getopts "hr:n" opt; do
             ;;
         r)
             requests_count="$OPTARG"
+            ;;
+        t)
+            over_time="$OPTARG"
             ;;
         \?)
             echo "Invalid option: -$OPTARG" >&2
@@ -41,9 +45,10 @@ else
     hostInsideContainer=$host
 fi
 
-$startApplication
-
 echo "requests_count (param -r) = $requests_count"
+echo "over_time (param -t) = $over_time seconds"
+
+$startApplication
 
 printf "Waiting for application is ready at $host"
 until $(curl --output /dev/null --silent --head --fail $host/application); do
@@ -55,7 +60,7 @@ printf '\n'
 curl -v -w '\n%{time_total}\n' -X POST "$host/event-reservations" -H 'Content-Type: application/json' -d '{"eventId": "uuid456", "limit": 100005}'
 printf '\n'
 
-export JAVA_OPTS_TEST="-Drequests_count=$requests_count -Dhostname_test=$hostInsideContainer"
+export JAVA_OPTS_TEST="-Dover_time=$over_time -Drequests_count=$requests_count -Dhostname_test=$hostInsideContainer"
 docker-compose --file docker-compose-test.yml up
 
 printf '\n available-tickets: '
