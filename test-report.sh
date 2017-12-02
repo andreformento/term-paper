@@ -18,7 +18,6 @@ while getopts "hr:n" opt; do
             ;;
         r)
             requests_count="$OPTARG"
-            echo "requests_count = $requests_count"
             ;;
         \?)
             echo "Invalid option: -$OPTARG" >&2
@@ -44,7 +43,7 @@ fi
 
 $startApplication
 
-echo "param -r = $requests_count"
+echo "requests_count (param -r) = $requests_count"
 
 printf "Waiting for application is ready at $host"
 until $(curl --output /dev/null --silent --head --fail $host/application); do
