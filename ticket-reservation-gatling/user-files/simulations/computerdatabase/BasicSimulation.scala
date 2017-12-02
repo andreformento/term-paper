@@ -12,6 +12,7 @@ import io.gatling.http.request.builder.HttpRequestBuilder
 class BasicSimulation extends Simulation { // 3
 
   val hostname = System.getProperty("hostname_test")
+  val requestsCount = System.getProperty("requests_count").toInt
   val httpConf = http // 4
     .baseURL(hostname) // 5
     .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8") // 6
@@ -21,7 +22,7 @@ class BasicSimulation extends Simulation { // 3
     .userAgentHeader("Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0")
 
   val scn = scenario("BasicSimulation") // 7
-    .exec(http("request_1")  // 8
+    .exec(http("user_ticket_reservation_request")  // 8
          .post("/events/uuid456/tickets")
          .body(StringBody("""{ "idUser": "uuid123", "count": 2}"""))
          .asJSON
@@ -29,8 +30,8 @@ class BasicSimulation extends Simulation { // 3
     .pause(0) // 10
 
     before {
-      printf("\n############ HOSTNAME: ")
-      printf(hostname)
+      printf("\n############ HOSTNAME: " + hostname)
+      printf("\n############ requestsCount: " + requestsCount.toString)
       printf("\n\n\n\n")
     }
 
@@ -43,7 +44,7 @@ class BasicSimulation extends Simulation { // 3
         // constantUsersPerSec(20) during(1 /*seconds*/) randomized, // 5
         // splitUsers(1000) into(rampUsers(10) over(1 /*seconds*/)) separatedBy(1 /*seconds*/), // 8
         // splitUsers(1000) into(rampUsers(10) over(1 /*seconds*/)) separatedBy atOnceUsers(30), // 9
-        heavisideUsers(3000) over(10 /*seconds*/) // 10
+        heavisideUsers(requestsCount) over(10 /*seconds*/)
       )
   ).protocols(httpConf) // 13
 
